@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -10,36 +10,54 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float maxHealth;
     public float MaxHealth => maxHealth;
-    [SerializeField] private float playerHealth;
-    public float PlayerHealth => playerHealth;
+    [SerializeField] private float health;
+    public float Health => health;
+    [SerializeField] private float stamina;
+    public float Stamina => stamina;
+    [SerializeField] private int hungry;
+    public int Hungry => hungry;
+    [SerializeField] private int fatigue;
+    public int Fatigue => fatigue;
+    public enum PlayerStats { health, fatigue, hungry, stamina }
+
+
     [SerializeField] private ulong playermoney;
     public ulong PlayerMoney
     {
         get { Debug.Log("Someone Try to Get Money"); return playermoney; }
-        set { OnMoneyChanged?.Invoke(1); Debug.Log("Someone Try to Set Money"); playermoney = value;}
+        set { OnMoneyChanged?.Invoke(1); Debug.Log("Someone Try to Set Money"); playermoney = value; }
     }
+    [HideInInspector] public UnityEvent<int> OnMoneyChanged;
+
+
+    [SerializeField] private float moveSpeed = 5f;
+    public float MoveSpeed => moveSpeed;
+    [SerializeField] private float jumpForce = 5f;
+    public float JumpForce => jumpForce;
+    [SerializeField] private bool isGrounded;
+    public bool IsGrounded => isGrounded;
+    [SerializeField] private bool canMove;
+    public bool CanMove => canMove;
+
+    
     [SerializeField] private int maxInventorySize = 9;
     public int MaxInventorySize => maxInventorySize;
     [SerializeField] private bool canAddItem { get => playerInventory.Count < maxInventorySize; }
     public bool CanAddItem => canAddItem;
-
-    private Rigidbody rb;
-    [SerializeField] private float moveSpeed = 5f;
-    public float MoveSpeed => moveSpeed;
-    private Vector2 _moveDirection;
-    [SerializeField] private InputActionReference move;
-
     [SerializeField] private List<Inventory> playerInventory = new List<Inventory>();
     public List<Inventory> PlayerInventory => playerInventory;
     private int currentSelectedIndex = 0;
     private Inventory CurrentSelectedItem => playerInventory.Count > 0 ? playerInventory[currentSelectedIndex] : null;
 
-    [HideInInspector] public UnityEvent<int> OnMoneyChanged;
+
+    private Rigidbody rb;
+
 
     public void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
         rb = GetComponent<Rigidbody>();
     }
 
@@ -50,9 +68,7 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
-        _moveDirection = move.action.ReadValue<Vector2>();
-        rb.linearVelocity = new Vector3(_moveDirection.x * moveSpeed, rb.linearVelocity.y, _moveDirection.y * moveSpeed);
-
+        HandleMovement();
         if (Input.GetKeyDown(KeyCode.E))
         {
             var firstItem = playerInventory.FirstOrDefault();
@@ -117,6 +133,42 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void HandleMovement()
+    {
+        if (!canMove) return;
+
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        Vector3 move = new Vector3(moveX, 0, moveZ) * moveSpeed;
+        Vector3 velocity = rb.linearVelocity;
+        rb.linearVelocity = new Vector3(move.x, velocity.y, move.z);
+
+        // Jump input
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            if (collision.contacts.Length > 0)
+            {
+                if (collision.contacts[0].normal.y > 0.5f)
+                {
+                    isGrounded = true;
+                }
+            }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            isGrounded = false;
+    }
+
     public void IncreaseMoney(ulong amount)
     {
         playermoney += amount;
@@ -125,8 +177,8 @@ public class Player : MonoBehaviour
 
     public void Heal(float amount)
     {
-        amount += playerHealth;
-        if (playerHealth > maxHealth) playerHealth = maxHealth;
+        amount += health;
+        if (health > maxHealth) health = maxHealth;
     }
 
     [System.Serializable]

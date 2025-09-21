@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Item : MonoBehaviour
@@ -6,7 +5,7 @@ public class Item : MonoBehaviour
     [SerializeField] private ItemData data;
     public ItemData Data => data;
 
-    private void OnCollisionEnter(Collision collision)
+    protected void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.TryGetComponent<Player>(out Player player))
         {
