@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
     private int currentSelectedIndex = 0;
     private Inventory CurrentSelectedItem => playerInventory.Count > 0 ? playerInventory[currentSelectedIndex] : null;
     [HideInInspector]
-    public Item currentHoldSlot
+    public ItemData currentHoldSlot
     {
         get { Inventory.Instance.GetHoldItem(); }
         private set;
