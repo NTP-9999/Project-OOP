@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodItem : MonoBehaviour
+public class FoodItem : ItemData
 {
     [SerializeField] private ItemData data;
     public ItemData Data => data;
@@ -12,16 +12,6 @@ public class FoodItem : MonoBehaviour
     public GameObject FoodPrefab => foodPrefab;
 
     public enum PlayerStats { health, fatigue, hungry, stamina }
-
-    protected void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.TryGetComponent<Player>(out Player player))
-        {
-            Debug.Log($"Picked up item: {data.Name}");
-            Player.Instance.AddItemToInventory(data, 1);
-            Destroy(gameObject);
-        }
-    }
 
     [System.Serializable]
     public class StatsEffect

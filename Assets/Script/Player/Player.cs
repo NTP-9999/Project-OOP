@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Cinemachine;
-using UnityEditor.Rendering;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -171,7 +171,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator HarvestIE()
     {
-        
+        yield break;
     }
 
 
@@ -183,7 +183,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator RepairIE()
     {
-        
+        yield break;
     }
 
 
