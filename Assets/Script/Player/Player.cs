@@ -44,12 +44,8 @@ public class Player : MonoBehaviour
 
 
     [Header("Camera Setup")]
-    [SerializeField] private CinemachineCamera cinemachineCamera;
-    [SerializeField] private float mouseSensitivity = 2f;
-    [SerializeField] private float minPitch = -30f;
-    [SerializeField] private float maxPitch = 60f;
-    private float yaw;
-    private float pitch;
+    private Transform cameraTransform;
+    [SerializeField] private float rotationSpeed = 0.8f;
 
     
     [SerializeField] private int maxInventorySize = 9;
@@ -71,17 +67,12 @@ public class Player : MonoBehaviour
         else Destroy(gameObject);
 
         rb = GetComponent<Rigidbody>();
+        cameraTransform = Camera.main.transform;
     }
 
     private void Start()
     {
         InventoryUI.Instance.LoadUI();
-
-        if (cinemachineCamera != null)
-        {
-            cinemachineCamera.Follow = this.gameObject.transform;
-            cinemachineCamera.LookAt = this.gameObject.transform;
-        }
     }
 
     public void Update()
@@ -158,6 +149,9 @@ public class Player : MonoBehaviour
 
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
+
+        Quaternion targetRotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
         Vector3 move = new Vector3(moveX, 0, moveZ) * moveSpeed;
         Vector3 velocity = rb.linearVelocity;

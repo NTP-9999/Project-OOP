@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 319082403}
   m_Layer: 0
   m_Name: CinemachineCamera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1361,7 +1361,6 @@ GameObject:
   - component: {fileID: 1287778234}
   - component: {fileID: 1287778233}
   - component: {fileID: 1287778232}
-  - component: {fileID: 1287778231}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1369,36 +1368,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1287778231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1287778230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: fa306b91a34ab5c4698cf68cbf430242, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: KeyBoard
-  m_DefaultActionMap: Gameplay
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &1287778232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1424,10 +1393,7 @@ MonoBehaviour:
   jumpForce: 5
   isGrounded: 0
   canMove: 1
-  cinemachineCamera: {fileID: 0}
-  mouseSensitivity: 2
-  minPitch: -30
-  maxPitch: 60
+  rotationSpeed: 0.8
   maxInventorySize: 9
   playerInventory: []
 --- !u!54 &1287778233
