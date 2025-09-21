@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Cinemachine;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,7 +21,6 @@ public class Player : MonoBehaviour
     public int Hungry => hungry = 100;
     [SerializeField] private int fatigue = 3;
     public int Fatigue => fatigue = 3;
-    public enum PlayerStats { health, fatigue, hungry, stamina }
 
 
     [SerializeField] private ulong playermoney;
@@ -41,13 +41,15 @@ public class Player : MonoBehaviour
     public bool IsGrounded => isGrounded;
     [SerializeField] private bool canMove = true;
     public bool CanMove => canMove;
+    [SerializeField] private bool isDead;
+    public bool IsDead => isDead;
 
 
     [Header("Camera Setup")]
     private Transform cameraTransform;
     [SerializeField] private float rotationSpeed = 0.8f;
 
-    
+
     [SerializeField] private int maxInventorySize = 9;
     public int MaxInventorySize => maxInventorySize;
     [SerializeField] private bool canAddItem { get => playerInventory.Count < maxInventorySize; }
@@ -56,6 +58,12 @@ public class Player : MonoBehaviour
     public List<Inventory> PlayerInventory => playerInventory;
     private int currentSelectedIndex = 0;
     private Inventory CurrentSelectedItem => playerInventory.Count > 0 ? playerInventory[currentSelectedIndex] : null;
+    [HideInInspector]
+    public Item currentHoldSlot
+    {
+        get { Inventory.Instance.GetHoldItem(); }
+        private set;
+    }
 
 
     private Rigidbody rb;
@@ -108,6 +116,88 @@ public class Player : MonoBehaviour
         Debug.Log($"Selected Item: {CurrentSelectedItem?.Item.name ?? "None"}");
         InventoryUI.Instance.HighlightSelected(currentSelectedIndex);
     }
+
+    private void Eat(FoodItem food)
+    {
+        foreach (var effect in food.StatsEffects)
+        {
+            switch (effect.playerstats)
+            {
+                case FoodItem.PlayerStats.health:
+                    health += effect.amount;
+                    if (health > maxHealth) health = maxHealth;
+                    break;
+
+                case FoodItem.PlayerStats.fatigue:
+                    Player.Instance.ModifyFatigue(effect.amount);
+                    break;
+
+                case FoodItem.PlayerStats.hungry:
+                    Player.Instance.ModifyHunger(effect.amount);
+                    break;
+
+                case FoodItem.PlayerStats.stamina:
+                    Player.Instance.ModifyStamina(effect.amount);
+                    break;
+            }
+        }
+    }
+
+    public void TakeDamage(float amount)
+    {
+        if (isDead) return;
+
+        if (!isDead) health -= amount;
+        if (health <= 0) Die();
+    }
+
+    private void Die()
+    {
+        
+    }
+
+
+    private void Punch()
+    {
+        
+    }
+
+
+    private void Harvest(Item resource)
+    {
+        
+    }
+
+
+    private IEnumerator HarvestIE()
+    {
+        
+    }
+
+
+    private void Repair(Recipe recipe)
+    {
+        
+    }
+
+
+    private IEnumerator RepairIE()
+    {
+        
+    }
+
+
+    private void PlaceThing()
+    {
+        
+    }
+
+
+    private void Sleep()
+    {
+        
+    }
+
 
     public void AddItemToInventory(ItemData item, ulong amount)
     {
