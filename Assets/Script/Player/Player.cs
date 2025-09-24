@@ -4,6 +4,7 @@ using Unity.Cinemachine;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.VisualScripting;
 
 public class Player : MonoBehaviour
 {
@@ -15,21 +16,18 @@ public class Player : MonoBehaviour
     public float MaxHealth => maxHealth = 100f;
     [SerializeField] private float health = 100f;
     public float Health => health = 100f;
-    [SerializeField] private float stamina = 100f;
+    [SerializeField] private float maxStamina = 100f;
+    public float MaxStamina => maxStamina;
+    private float stamina = 100f;
     public float Stamina => stamina = 100f;
-    [SerializeField] private int hungry = 100;
-    public int Hungry => hungry = 100;
-    [SerializeField] private int fatigue = 3;
-    public int Fatigue => fatigue = 3;
-
-
-    [SerializeField] private ulong playermoney;
-    public ulong PlayerMoney
-    {
-        get { Debug.Log("Someone Try to Get Money"); return playermoney; }
-        set { OnMoneyChanged?.Invoke(1); Debug.Log("Someone Try to Set Money"); playermoney = value; }
-    }
-    [HideInInspector] public UnityEvent<int> OnMoneyChanged;
+    [SerializeField] private int maxHungry = 100;
+    public int MaxHungry => maxHungry;
+    private int hungry = 100;
+    public int Hungry => hungry;
+    [SerializeField] private int maxFatigue = 3;
+    public int MaxFatigue => maxFatigue;
+    private int fatigue = 3;
+    public int Fatigue => fatigue;
 
 
     [Header("Movement")]
@@ -49,20 +47,11 @@ public class Player : MonoBehaviour
     private Transform cameraTransform;
     [SerializeField] private float rotationSpeed = 0.8f;
 
-
-    [SerializeField] private int maxInventorySize = 9;
-    public int MaxInventorySize => maxInventorySize;
-    [SerializeField] private bool canAddItem { get => playerInventory.Count < maxInventorySize; }
-    public bool CanAddItem => canAddItem;
-    [SerializeField] private List<Inventory> playerInventory = new List<Inventory>();
-    public List<Inventory> PlayerInventory => playerInventory;
-    private int currentSelectedIndex = 0;
-    private Inventory CurrentSelectedItem => playerInventory.Count > 0 ? playerInventory[currentSelectedIndex] : null;
+    
     [HideInInspector]
-    public ItemData currentHoldSlot
+    public ItemData CurrentHoldSlot
     {
-        get { Inventory.Instance.GetHoldItem(); }
-        private set;
+        get { return Inventory.Instance.GetHoldItem(); }
     }
 
 
@@ -80,41 +69,12 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        InventoryUI.Instance.LoadUI();
+        Inventory.Instance.LoadUI();
     }
 
     public void Update()
     {
-        HandleMovement();
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            var firstItem = playerInventory.FirstOrDefault();
-            firstItem?.Use(firstItem.Item);
-        }
-
-        float scroll = Input.mouseScrollDelta.y;
-        if (scroll != 0 && playerInventory.Count > 0)
-        {
-            if (scroll > 0) currentSelectedIndex--;
-            else if (scroll < 0) currentSelectedIndex++;
-
-            if (currentSelectedIndex < 0) currentSelectedIndex = playerInventory.Count - 1;
-            if (currentSelectedIndex >= playerInventory.Count) currentSelectedIndex = 0;
-
-            UpdateSelectedItemUI();
-        }
-    }
-
-    private void UpdateMoney(int amount)
-    {
-        Debug.Log("Money Has Changed");
-    }
-
-    private void UpdateSelectedItemUI()
-    {
-        Debug.Log($"Selected Item: {CurrentSelectedItem?.Item.name ?? "None"}");
-        InventoryUI.Instance.HighlightSelected(currentSelectedIndex);
+        HandleMovement();   
     }
 
     private void Eat(FoodItem food)
@@ -123,21 +83,14 @@ public class Player : MonoBehaviour
         {
             switch (effect.playerstats)
             {
-                case FoodItem.PlayerStats.health:
+                case FoodItem.StatsEffect.PlayerStats.health:
                     health += effect.amount;
                     if (health > maxHealth) health = maxHealth;
                     break;
 
-                case FoodItem.PlayerStats.fatigue:
-                    Player.Instance.ModifyFatigue(effect.amount);
-                    break;
-
-                case FoodItem.PlayerStats.hungry:
-                    Player.Instance.ModifyHunger(effect.amount);
-                    break;
-
-                case FoodItem.PlayerStats.stamina:
-                    Player.Instance.ModifyStamina(effect.amount);
+                case FoodItem.StatsEffect.PlayerStats.hungry:
+                    hungry += (int)effect.amount;
+                    if (hungry > maxHungry) hungry = maxHungry;
                     break;
             }
         }
@@ -163,7 +116,7 @@ public class Player : MonoBehaviour
     }
 
 
-    private void Harvest(Item resource)
+    private void Harvest(ItemData resource)
     {
         
     }
@@ -175,7 +128,7 @@ public class Player : MonoBehaviour
     }
 
 
-    private void Repair(Recipe recipe)
+    private void Repair(RepairRecipe recipe)
     {
         
     }
@@ -198,40 +151,6 @@ public class Player : MonoBehaviour
         
     }
 
-
-    public void AddItemToInventory(ItemData item, ulong amount)
-    {
-        if (!canAddItem) return;
-
-        foreach (var inv in playerInventory)
-        {
-            if (inv.Item == item)
-            {
-                inv.Amount += amount;
-                InventoryUI.Instance.LoadUI();
-                return;
-            }
-        }
-
-        playerInventory.Add(new Inventory(item, amount));
-        InventoryUI.Instance.LoadUI();
-    }
-
-    public void RemoveItemFromInventory(ItemData item, ulong amount)
-    {
-        if (!canAddItem) return;
-
-        foreach (var inv in playerInventory)
-        {
-            if (inv.Item == item)
-            {
-                inv.Amount -= amount;
-                if(inv.Amount <= 0) playerInventory.Remove(inv);
-                InventoryUI.Instance.LoadUI();
-                return;
-            }
-        }
-    }
 
     private void HandleMovement()
     {
@@ -272,36 +191,9 @@ public class Player : MonoBehaviour
             isGrounded = false;
     }
 
-    public void IncreaseMoney(ulong amount)
-    {
-        playermoney += amount;
-        Debug.Log($"Increased money by {amount}. Total money: {playermoney}");
-    }
-
     public void Heal(float amount)
     {
         amount += health;
         if (health > maxHealth) health = maxHealth;
-    }
-
-    [System.Serializable]
-    public class Inventory
-    {
-        [SerializeField] private ItemData item;
-        public ItemData Item => item;
-        [SerializeField] private ulong amount;
-        public ulong Amount { get => amount; set => amount = value; }
-
-        public Inventory(ItemData item, ulong amount)
-        {
-            this.item = item;
-            this.amount = amount;
-        }
-
-        public void Use(ItemData item)
-        {
-            item.Use();
-        }
-        
     }
 }

@@ -11,11 +11,11 @@ public class FoodItem : ItemData
     [SerializeField] private GameObject foodPrefab;
     public GameObject FoodPrefab => foodPrefab;
 
-    public enum PlayerStats { health, fatigue, hungry, stamina }
 
     [System.Serializable]
     public class StatsEffect
     {
+        public enum PlayerStats { health, hungry }
         public PlayerStats playerstats;
         public float amount;
     }

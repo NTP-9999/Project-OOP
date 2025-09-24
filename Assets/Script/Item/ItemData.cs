@@ -12,7 +12,6 @@ public abstract class ItemData : ScriptableObject
 
     public virtual void Use()
     {
-        Player.Instance.IncreaseMoney(_coinToIncrease);
-        Player.Instance.RemoveItemFromInventory(this, 1);
+        Inventory.Instance.RemoveItemFromInventory(this, 1);
     }
 }
