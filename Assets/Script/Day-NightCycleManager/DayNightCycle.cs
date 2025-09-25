@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class DayNightSettings
@@ -46,11 +47,11 @@ public class DayNightCycle : MonoBehaviour
     private string timeDisplay;
 
     [Header("Events")]
-    public UnityEngine.Events.UnityEvent OnSunrise;
-    public UnityEngine.Events.UnityEvent OnNoon;
-    public UnityEngine.Events.UnityEvent OnSunset;
-    public UnityEngine.Events.UnityEvent OnMidnight;
-    public UnityEngine.Events.UnityEvent OnNewDay;
+    public UnityEvent OnSunrise;
+    public UnityEvent OnNoon;
+    public UnityEvent OnSunset;
+    public UnityEvent OnMidnight;
+    public UnityEvent OnNewDay;
 
     // Private variables
     private bool hasSunriseTriggered, hasNoonTriggered, hasSunsetTriggered, hasMidnightTriggered;

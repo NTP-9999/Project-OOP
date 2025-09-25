@@ -5,7 +5,9 @@ public class Enemy : EntityBase   // or : MonoBehaviour, IEntity
 {
     [SerializeField] private float attackDamage = 10f;
     [SerializeField] private float attackCooldown = 1.5f;
-    [SerializeField] private float detectRange = 5f;
+    [SerializeField] private float attackRange = 5f;
+    [SerializeField] private bool canAttack = false;
+    public bool CanAttack => canAttack;
 
     private Transform target;
 
@@ -24,6 +26,7 @@ public class Enemy : EntityBase   // or : MonoBehaviour, IEntity
 
     public void Attack()
     {
+        if (!canAttack) return;
         // Immediate attack logic
         Debug.Log($"{name} attacks for {attackDamage} damage.");
     }

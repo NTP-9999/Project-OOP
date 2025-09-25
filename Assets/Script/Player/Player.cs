@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
         HandleMovement();   
     }
 
-    private void Eat(FoodItem food)
+    public void Eat(FoodItem food)
     {
         foreach (var effect in food.StatsEffects)
         {

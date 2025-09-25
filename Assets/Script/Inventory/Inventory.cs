@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
+using System.Diagnostics.Tracing;
 
 public class Inventory : MonoBehaviour
 {
@@ -159,6 +160,7 @@ public class Inventory : MonoBehaviour
 
         public void Use(ItemData item)
         {
+            if (item is FoodItem food) Player.Instance.Eat(food);
             item.Use();
         }
         
