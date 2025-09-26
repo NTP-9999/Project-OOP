@@ -118,13 +118,16 @@ public class Player : MonoBehaviour
 
     private void Harvest(ItemData resource)
     {
-        
+        StartCoroutine(HarvestIE(resource));
     }
 
 
-    private IEnumerator HarvestIE()
+    private IEnumerator HarvestIE(ItemData resource)
     {
-        yield break;
+        if(!resource is ResourceItem) yield break;
+        
+        
+        yield return new waitforsecound(resourceItem.Duration);
     }
 
 
@@ -148,7 +151,8 @@ public class Player : MonoBehaviour
 
     private void Sleep()
     {
-        
+        fatigue++;
+        if(fatigue > maxFatigue) fatigue = maxFatigue;
     }
 
 
