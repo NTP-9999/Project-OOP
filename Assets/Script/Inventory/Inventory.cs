@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
 using System.Diagnostics.Tracing;
+using Unity.VisualScripting.ReorderableList;
 
 public class Inventory : MonoBehaviour
 {
@@ -42,6 +43,8 @@ public class Inventory : MonoBehaviour
 
     private void Update()
     {
+        if (Player.Instance.CurrentHoldItem is GlowItem glowItem) glowItem.Glow();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             var firstItem = playerInventory.FirstOrDefault();
@@ -143,7 +146,7 @@ public class Inventory : MonoBehaviour
             img.color = (i == index) ? highlightColor : normalColor;
         }
     }
-    
+
     [System.Serializable]
     public class InventoryItem
     {
@@ -161,7 +164,14 @@ public class Inventory : MonoBehaviour
         public void Use(ItemData item)
         {
             if (item is FoodItem food) Player.Instance.Eat(food);
-            item.Use();
+
+            Inventory.Instance.RemoveItemFromInventory(item, 1);
+        }
+
+        public void Use()
+        {
+            ItemData item = Player.Instance.CurrentHoldItem;
+            Use(item);
         }
         
     }

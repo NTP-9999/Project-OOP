@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
 
     
     [HideInInspector]
-    public ItemData CurrentHoldSlot
+    public ItemData CurrentHoldItem
     {
         get { return Inventory.Instance.GetHoldItem(); }
     }

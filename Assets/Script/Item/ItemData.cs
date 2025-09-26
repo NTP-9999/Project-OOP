@@ -9,9 +9,4 @@ public abstract class ItemData : ScriptableObject
     [SerializeField] public Sprite _icon;
     public ulong CoinToIncrease => _coinToIncrease;
     [SerializeField] private ulong _coinToIncrease;
-
-    public virtual void Use()
-    {
-        Inventory.Instance.RemoveItemFromInventory(this, 1);
-    }
 }
