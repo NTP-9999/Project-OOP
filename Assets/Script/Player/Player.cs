@@ -5,6 +5,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -180,8 +181,10 @@ public class Player : MonoBehaviour
     }
 
 
-    private void Sleep()
+    public void Sleep(Bed bed)
     {
+        if (!bed.CanSleep) return;
+        
         fatigue++;
         if(fatigue > maxFatigue) fatigue = maxFatigue;
     }
@@ -200,7 +203,7 @@ public class Player : MonoBehaviour
         rb.linearVelocity = new Vector3(move.x, velocity.y, move.z);
 
         // Jump input
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
@@ -222,11 +225,5 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
             isGrounded = false;
-    }
-
-    public void Heal(float amount)
-    {
-        amount += health;
-        if (health > maxHealth) health = maxHealth;
     }
 }

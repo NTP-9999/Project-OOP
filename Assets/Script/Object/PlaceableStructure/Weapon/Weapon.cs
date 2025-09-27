@@ -31,11 +31,8 @@ public abstract class Weapon : MonoBehaviour, IPlaceableStructure
     }
     public void Fix()
     {
-        if (PlayerInArea)
-        {
-            if (Input.GetKeyDown(KeyCode.R)) Player.Instance.Repair(repairData);
-            Health = MaxHealth;
-        }
+        Player.Instance.Repair(repairData);
+        Health = MaxHealth;
     }
     public abstract void DestroyStructure();
 
@@ -59,6 +56,13 @@ public abstract class Weapon : MonoBehaviour, IPlaceableStructure
         else if (other.TryGetComponent<Player>(out Player player))
         {
             PlayerInArea = true;
+        }
+    }
+    void OnTriggerStay(Collider other)
+    {
+        if (other.TryGetComponent<Player>(out Player player))
+        {
+            if (Input.GetKeyDown(KeyCode.R)) Fix();
         }
     }
     void OnTriggerExit(Collider other)

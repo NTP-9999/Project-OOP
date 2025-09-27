@@ -20,9 +20,9 @@ public class Resouce : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (playerInRange)
         {
-            if (playerInRange && Time.time - lastHitTime >= duration)
+            if (Input.GetKeyDown(KeyCode.E) && Time.time - lastHitTime >= duration)
             {
                 Player.Instance.Harvest(data);
                 Hit();
