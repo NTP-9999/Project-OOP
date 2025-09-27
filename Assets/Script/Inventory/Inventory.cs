@@ -45,6 +45,8 @@ public class Inventory : MonoBehaviour
     {
         if (Player.Instance.CurrentHoldItem is GlowItem glowItem) glowItem.Glow();
 
+        if (Input.GetMouseButtonDown(1)) CurrentSelectedItem?.Use(Player.Instance.CurrentHoldItem);
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             var firstItem = playerInventory.FirstOrDefault();
@@ -174,6 +176,7 @@ public class Inventory : MonoBehaviour
         public void Use(ItemData item)
         {
             if (item is FoodItem food) Player.Instance.Eat(food);
+            else if (item is PlaceableStructureItem) Player.Instance.PlaceThing();
 
             Instance.RemoveItemFromInventory(item, 1);
         }

@@ -169,9 +169,14 @@ public class Player : MonoBehaviour
     }
 
 
-    private void PlaceThing()
+    public void PlaceThing()
     {
-        
+        if (CurrentHoldItem is not PlaceableStructureItem placeable) return;
+
+        var placeObject = Instantiate(placeable.Prefab, transform.forward, Quaternion.identity);
+        Inventory.Instance.RemoveItemFromInventory(placeable, 1);
+
+        placeObject.TryGetComponent<IPlaceableStructure>(out var structure);
     }
 
 
