@@ -50,8 +50,12 @@ public class Player : MonoBehaviour
 
 
     [Header("Camera Setup")]
-    private Transform cameraTransform;
     [SerializeField] private float rotationSpeed = 0.8f;
+    [SerializeField] private float mouseSensitivity = 0.8f;
+    private float tpsYaw = 0f;
+    private float tpsPitch = 10f;
+    private Transform TpsPivot => tpsCameraPivot;
+    [SerializeField] private Transform tpsCameraPivot;
 
     
     [HideInInspector]
@@ -70,7 +74,6 @@ public class Player : MonoBehaviour
         else Destroy(gameObject);
 
         rb = GetComponent<Rigidbody>();
-        cameraTransform = Camera.main.transform;
     }
 
     private void Start()
@@ -195,14 +198,25 @@ public class Player : MonoBehaviour
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
-        Quaternion targetRotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        Vector3 camForward = Camera.main.transform.forward;
+        Vector3 camRight = Camera.main.transform.right;
 
-        Vector3 move = new Vector3(moveX, 0, moveZ) * moveSpeed;
+        camForward.y = 0f;
+        camRight.y = 0f;
+        camForward.Normalize();
+        camRight.Normalize();
+
+        Vector3 moveDir = (camForward * moveZ + camRight * moveX).normalized;
+
         Vector3 velocity = rb.linearVelocity;
-        rb.linearVelocity = new Vector3(move.x, velocity.y, move.z);
+        rb.linearVelocity = new Vector3(moveDir.x * moveSpeed, velocity.y, moveDir.z * moveSpeed);
 
-        // Jump input
+        if (moveDir.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
