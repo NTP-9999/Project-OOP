@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 [CreateAssetMenu(fileName = "PlacableStructureItem", menuName = "Item/PlacableStructureItem")]
-public class PlacableStructureItem : ItemData
+public class PlaceableStructureItem : ItemData
 {
     [SerializeField] private List<RequireItem> requireItem;
     public RequireItem[] RequireItems => requireItem.ToArray();

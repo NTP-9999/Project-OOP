@@ -28,6 +28,11 @@ public class Player : MonoBehaviour
     public int MaxFatigue => maxFatigue;
     private int fatigue = 3;
     public int Fatigue => fatigue;
+    [SerializeField] private float attackDamage = 10f;
+    public float AttackDamage => attackDamage;
+    [SerializeField] private float attackCooldown = 1f;
+    public float AttackCooldown => attackCooldown;
+    private float lastAttackTime = -Mathf.Infinity;
 
 
     [Header("Movement")]
@@ -74,7 +79,8 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
-        if (canMove) HandleMovement();   
+        if (canMove) HandleMovement();
+        if (Input.GetMouseButtonDown(0)) Punch();
     }
 
     public void Eat(FoodItem food)
@@ -112,7 +118,17 @@ public class Player : MonoBehaviour
 
     private void Punch()
     {
-        
+        if (Time.time - lastAttackTime < attackCooldown) return;
+
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 2f))
+        {
+            if (hit.collider.TryGetComponent<IEntity>(out IEntity entity))
+            {
+                if (entity is Enemy enemy) enemy.TakeDamage(attackDamage);
+                if (entity is Animal animal) animal.TakeDamage(attackDamage);
+            }
+        }
+        lastAttackTime = Time.time;
     }
 
 
@@ -121,7 +137,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator HarvestIE(ItemData resource)
     {
-        if (!(resource is ResourceItem resourceItem)) yield break;
+        if (resource is not ResourceItem resourceItem) yield break;
 
         canMove = false;
 
@@ -132,15 +148,24 @@ public class Player : MonoBehaviour
     }
 
 
-    private void Repair(RepairRecipe recipe)
+    public void Repair(Recipe recipe)
     {
-        
-    }
+        if (recipe is not RepairRecipe repairRecipe) return;
 
+        canMove = false;
 
-    private IEnumerator RepairIE()
-    {
-        yield break;
+        foreach (var required in repairRecipe.RequireItems)
+        {
+            if (Inventory.Instance.GetItemAmount(required.Item) < required.Amount)
+            {
+                canMove = true;
+                return;
+            }
+            else if (Inventory.Instance.GetItemAmount(required.Item) >= required.Amount)
+            {
+                Inventory.Instance.RemoveItemFromInventory(required.Item, required.Amount);
+            }
+        }
     }
 
 

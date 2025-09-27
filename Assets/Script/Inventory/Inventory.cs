@@ -76,7 +76,7 @@ public class Inventory : MonoBehaviour
     }
 
 
-    public void AddItemToInventory(ItemData item, ulong amount)
+    public void AddItemToInventory(ItemData item, int amount)
     {
         if (!canAddItem) return;
 
@@ -93,7 +93,19 @@ public class Inventory : MonoBehaviour
         OnInventoryChanged?.Invoke();
     }
 
-    public void RemoveItemFromInventory(ItemData item, ulong amount)
+    public int GetItemAmount(ItemData item)
+    {
+        foreach (var inv in playerInventory)
+        {
+            if (inv.Item == item)
+            {
+                return inv.Amount;
+            }
+        }
+        return 0;
+    }
+
+    public void RemoveItemFromInventory(ItemData item, int amount)
     {
         if (!canAddItem) return;
 
@@ -117,8 +129,6 @@ public class Inventory : MonoBehaviour
 
     public void LoadUI()
     {
-        var player = Player.Instance;
-
         foreach (Transform t in itemListParent)
             Destroy(t.gameObject);
 
@@ -152,10 +162,10 @@ public class Inventory : MonoBehaviour
     {
         [SerializeField] private ItemData item;
         public ItemData Item => item;
-        [SerializeField] private ulong amount;
-        public ulong Amount { get => amount; set => amount = value; }
+        [SerializeField] private int amount;
+        public int Amount { get => amount; set => amount = value; }
 
-        public InventoryItem(ItemData item, ulong amount)
+        public InventoryItem(ItemData item, int amount)
         {
             this.item = item;
             this.amount = amount;
@@ -165,7 +175,7 @@ public class Inventory : MonoBehaviour
         {
             if (item is FoodItem food) Player.Instance.Eat(food);
 
-            Inventory.Instance.RemoveItemFromInventory(item, 1);
+            Instance.RemoveItemFromInventory(item, 1);
         }
 
         public void Use()
