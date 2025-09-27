@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
-        HandleMovement();   
+        if (canMove) HandleMovement();   
     }
 
     public void Eat(FoodItem food)
@@ -116,18 +116,19 @@ public class Player : MonoBehaviour
     }
 
 
-    private void Harvest(ItemData resource)
-    {
-        StartCoroutine(HarvestIE(resource));
-    }
+    public void Harvest(ItemData resource) => StartCoroutine(HarvestIE(resource));
 
 
     private IEnumerator HarvestIE(ItemData resource)
     {
-        if(!resource is ResourceItem) yield break;
-        
-        
-        yield return new waitforsecound(resourceItem.Duration);
+        if (!(resource is ResourceItem resourceItem)) yield break;
+
+        canMove = false;
+
+        Inventory.Instance.AddItemToInventory(resourceItem, 1);
+        yield return new WaitForSeconds(resourceItem.Duration);
+
+        canMove = true;
     }
 
 
@@ -158,8 +159,6 @@ public class Player : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (!canMove) return;
-
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
