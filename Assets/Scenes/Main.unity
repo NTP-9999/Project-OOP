@@ -1189,20 +1189,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd0d4209c71fde40ac4e36e0c78cd83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 0
+  maxHealth: 100
   Health: 100
   maxStamina: 100
   stamina: 100
   maxHungry: 100
   Hungry: 100
   maxFatigue: 3
+  fatigue: 3
   attackDamage: 10
   attackCooldown: 1
+  isDead: 0
   moveSpeed: 5
   jumpForce: 5
   isGrounded: 0
   canMove: 1
-  isDead: 0
   rotationSpeed: 0.8
   mouseSensitivity: 0.8
   tpsCameraPivot: {fileID: 0}

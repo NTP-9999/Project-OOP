@@ -25,13 +25,15 @@ public class Player : MonoBehaviour
     public int Hungry = 100;
     [SerializeField] private int maxFatigue = 3;
     public int MaxFatigue => maxFatigue;
-    private int fatigue = 3;
+    [SerializeField] private int fatigue = 3;
     public int Fatigue => fatigue;
     [SerializeField] private float attackDamage = 10f;
     public float AttackDamage => attackDamage;
     [SerializeField] private float attackCooldown = 1f;
     public float AttackCooldown => attackCooldown;
     private float lastAttackTime = -Mathf.Infinity;
+    [SerializeField] private bool isDead;
+    public bool IsDead => isDead;
 
 
     [Header("Movement")]
@@ -43,8 +45,6 @@ public class Player : MonoBehaviour
     public bool IsGrounded => isGrounded;
     [SerializeField] private bool canMove = true;
     public bool CanMove => canMove;
-    [SerializeField] private bool isDead;
-    public bool IsDead => isDead;
 
 
     [Header("Camera Setup")]
