@@ -917,7 +917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  offset: {x: 0, y: 2, z: -4}
+  offset: {x: 0, y: 0.83, z: -3.42}
   rotationSpeed: 3
   pitchMin: -20
   pitchMax: 60
@@ -927,7 +927,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   collisionRadius: 0.3
   minDistance: 0.5
-  cameraPivot: {fileID: 0}
+  cameraPivot: {fileID: 1275348081}
 --- !u!4 &1140725286
 Transform:
   m_ObjectHideFlags: 0
