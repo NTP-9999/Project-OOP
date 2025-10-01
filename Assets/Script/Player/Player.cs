@@ -116,8 +116,7 @@ public class Player : MonoBehaviour
         {
             if (hit.collider.TryGetComponent<IEntity>(out IEntity entity))
             {
-                if (entity is Enemy enemy) enemy.TakeDamage(attackDamage);
-                if (entity is Animal animal) animal.TakeDamage(attackDamage);
+                entity.TakeDamage(attackDamage);
             }
         }
         lastAttackTime = Time.time;
@@ -174,10 +173,7 @@ public class Player : MonoBehaviour
 
     public void Sleep(Bed bed)
     {
-        if (!bed.CanSleep) return;
-        
         fatigue++;
-        if(fatigue > maxFatigue) fatigue = maxFatigue;
     }
 
 
