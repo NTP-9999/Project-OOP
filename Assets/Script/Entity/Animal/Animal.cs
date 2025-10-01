@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Animal : EntityBase   // or : MonoBehaviour, IEntity if skipping EntityBase
 {
-    [SerializeField] private ItemData itemDrop;   // Drag an Item ScriptableObject in the inspector
+    [SerializeField] private ItemSO itemDrop;   // Drag an Item ScriptableObject in the inspector
 
     public override void Move()
     {

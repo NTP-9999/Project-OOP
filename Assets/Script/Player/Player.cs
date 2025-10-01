@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
 
     
     [HideInInspector]
-    public ItemData CurrentHoldItem
+    public ItemSO CurrentHoldItem
     {
         get { return Inventory.Instance.GetHoldItem(); }
     }
@@ -124,17 +124,17 @@ public class Player : MonoBehaviour
     }
 
 
-    public void Harvest(ItemData resource) => StartCoroutine(HarvestIE(resource));
+    public void Harvest(ItemSO resource) => StartCoroutine(HarvestIE(resource));
 
 
-    private IEnumerator HarvestIE(ItemData resource)
+    private IEnumerator HarvestIE(ItemSO resource)
     {
-        if (resource is not ResourceItem resourceItem) yield break;
+        if (resource is not ResourceSO resourceSO) yield break;
 
         canMove = false;
 
-        Inventory.Instance.AddItemToInventory(resourceItem, 1);
-        yield return new WaitForSeconds(resourceItem.Duration);
+        Inventory.Instance.AddItemToInventory(resourceSO, 1);
+        yield return new WaitForSeconds(resourceSO.Duration);
 
         canMove = true;
     }
@@ -163,7 +163,7 @@ public class Player : MonoBehaviour
 
     public void PlaceThing()
     {
-        if (CurrentHoldItem is not PlaceableStructureItem placeable) return;
+        if (CurrentHoldItem is not PlaceableStructureSO placeable) return;
 
         var placeObject = Instantiate(placeable.Prefab, transform.forward, Quaternion.identity);
         Inventory.Instance.RemoveItemFromInventory(placeable, 1);
