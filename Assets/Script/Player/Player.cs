@@ -1,11 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
-using Unity.Cinemachine;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
-using Unity.VisualScripting;
-using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
