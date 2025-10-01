@@ -87,18 +87,18 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) Punch();
     }
 
-    public void Eat(FoodItem food)
+    public void Eat(FoodData food)
     {
         foreach (var effect in food.StatsEffects)
         {
             switch (effect.playerstats)
             {
-                case FoodItem.StatsEffect.PlayerStats.health:
+                case FoodData.StatsEffect.PlayerStats.health:
                     health += effect.amount;
                     if (health > maxHealth) health = maxHealth;
                     break;
 
-                case FoodItem.StatsEffect.PlayerStats.hungry:
+                case FoodData.StatsEffect.PlayerStats.hungry:
                     hungry += (int)effect.amount;
                     if (hungry > maxHungry) hungry = maxHungry;
                     break;

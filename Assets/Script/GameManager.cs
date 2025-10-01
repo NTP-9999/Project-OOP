@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         {
             Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
             Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-            newEnemy.InitStats(difficulty);
+            //newEnemy.InitStats(difficulty);
         }
 
         Debug.Log($"Spawned {enemiesToSpawn} enemies for Night {currentDay}.");

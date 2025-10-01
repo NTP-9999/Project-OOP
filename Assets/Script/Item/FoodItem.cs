@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodItem : ItemData
+public class FoodData : ItemData
 {
     [SerializeField] private ItemData data;
     public ItemData Data => data;
