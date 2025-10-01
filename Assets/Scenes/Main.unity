@@ -923,11 +923,14 @@ MonoBehaviour:
   pitchMax: 60
   smoothFollow: 0.1
   collisionMask:
-    serializedVersion: 2
     m_Bits: 4294967295
   collisionRadius: 0.3
   minDistance: 0.5
+  yaw: 0
+  pitch: 0
+  camVelocity: {x: 0, y: 0, z: 0}
   cameraPivot: {fileID: 1275348081}
+  cam: {fileID: 0}
 --- !u!4 &1140725286
 Transform:
   m_ObjectHideFlags: 0
@@ -1187,9 +1190,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 0
-  health: 0
+  Health: 100
   maxStamina: 100
+  stamina: 100
   maxHungry: 100
+  Hungry: 100
   maxFatigue: 3
   attackDamage: 10
   attackCooldown: 1
