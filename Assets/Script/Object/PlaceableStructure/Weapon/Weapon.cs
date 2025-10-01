@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public abstract class Weapon : MonoBehaviour, IPlaceableStructure
 {
-    public PlaceableStructureItem placeData { get; private set; }
+    public PlaceableStructureSO placeData { get; private set; }
     public RepairRecipe repairData { get; private set; }
     public float Health { get; private set; }
     public float MaxHealth { get; private set; }

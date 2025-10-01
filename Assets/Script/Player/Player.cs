@@ -87,11 +87,6 @@ public class Player : MonoBehaviour
         if (stamina > maxStamina) stamina = maxStamina;
         if (Hungry > maxHungry) Hungry = maxHungry;
         if (fatigue > maxFatigue) fatigue = maxFatigue;
-
-        if (CurrentHoldItem is ItemData itemData)
-        {
-            Instantiate(itemData.Prefab, transform.position + transform.forward + Vector3.up, Quaternion.identity);
-        }
     }
 
     public void Eat(FoodSO food)

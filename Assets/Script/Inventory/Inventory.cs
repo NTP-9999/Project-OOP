@@ -43,7 +43,10 @@ public class Inventory : MonoBehaviour
 
     private void Update()
     {
-        if (Player.Instance.CurrentHoldItem is GlowItem glowItem) glowItem.Glow();
+        if (Player.Instance.CurrentHoldItem is ItemSO ItemSO)
+        {
+            Instantiate(ItemSO.Prefab, transform.position + transform.forward + Vector3.up, Quaternion.identity);
+        }
 
         if (Input.GetMouseButtonDown(1)) CurrentSelectedItem?.Use(Player.Instance.CurrentHoldItem);
 
@@ -78,7 +81,7 @@ public class Inventory : MonoBehaviour
     }
 
 
-    public void AddItemToInventory(ItemData item, int amount)
+    public void AddItemToInventory(ItemSO item, int amount)
     {
         if (!canAddItem) return;
 
@@ -95,7 +98,7 @@ public class Inventory : MonoBehaviour
         OnInventoryChanged?.Invoke();
     }
 
-    public int GetItemAmount(ItemData item)
+    public int GetItemAmount(ItemSO item)
     {
         foreach (var inv in playerInventory)
         {
@@ -107,7 +110,7 @@ public class Inventory : MonoBehaviour
         return 0;
     }
 
-    public void RemoveItemFromInventory(ItemData item, int amount)
+    public void RemoveItemFromInventory(ItemSO item, int amount)
     {
         if (!canAddItem) return;
 
@@ -123,9 +126,9 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public ItemData GetHoldItem()
+    public ItemSO GetHoldItem()
     {
-        ItemData item = CurrentSelectedItem.Item;
+        ItemSO item = CurrentSelectedItem.Item;
         return item;
     }
 
@@ -162,28 +165,28 @@ public class Inventory : MonoBehaviour
     [System.Serializable]
     public class InventoryItem
     {
-        [SerializeField] private ItemData item;
-        public ItemData Item => item;
+        [SerializeField] private ItemSO item;
+        public ItemSO Item => item;
         [SerializeField] private int amount;
         public int Amount { get => amount; set => amount = value; }
 
-        public InventoryItem(ItemData item, int amount)
+        public InventoryItem(ItemSO item, int amount)
         {
             this.item = item;
             this.amount = amount;
         }
 
-        public void Use(ItemData item)
+        public void Use(ItemSO item)
         {
             if (item is FoodSO food) Player.Instance.Eat(food);
-            else if (item is PlaceableStructureItem) Player.Instance.PlaceThing();
+            else if (item is PlaceableStructureSO) Player.Instance.PlaceThing();
 
             Instance.RemoveItemFromInventory(item, 1);
         }
 
         public void Use()
         {
-            ItemData item = Player.Instance.CurrentHoldItem;
+            ItemSO item = Player.Instance.CurrentHoldItem;
             Use(item);
         }
         

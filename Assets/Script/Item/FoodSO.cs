@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodSO : ItemData
+public class FoodSO : ItemSO
 {
-    [SerializeField] private ItemData data;
-    public ItemData Data => data;
+    [SerializeField] private ItemSO data;
+    public ItemSO Data => data;
     [SerializeField] private List<StatsEffect> statsEffects = new();
     public List<StatsEffect> StatsEffects => statsEffects;
 

@@ -6,15 +6,15 @@ public class Recipe : ScriptableObject
 {
     [SerializeField] private List<RequireItem> requireItems = new();
     public RequireItem[] RequireItems => requireItems.ToArray();
-    [SerializeField] private ItemData resultItem;
-    public ItemData ResultItem => resultItem;
+    [SerializeField] private ItemSO resultItem;
+    public ItemSO ResultItem => resultItem;
 
 
     [System.Serializable]
     public class RequireItem
     {
-        private ItemData item;
-        public ItemData Item => item;
+        private ItemSO item;
+        public ItemSO Item => item;
         private int amount;
         public int Amount => amount;
     } 
