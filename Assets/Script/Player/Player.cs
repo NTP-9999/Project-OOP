@@ -84,6 +84,9 @@ public class Player : MonoBehaviour
         if (stamina > maxStamina) stamina = maxStamina;
         if (Hungry > maxHungry) Hungry = maxHungry;
         if (fatigue > maxFatigue) fatigue = maxFatigue;
+
+        Debug.Log($"CurrentHoldItem is {CurrentHoldItem}");
+        Debug.Log($"isGrounded is {isGrounded}");
     }
 
     public void Eat(FoodSO food)
