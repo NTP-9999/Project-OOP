@@ -14,7 +14,7 @@ public class DayNightSettings
 
     [Header("Sun Settings")]
     public Light sunLight;
-    public Gradient sunColor = new Gradient();
+    public Gradient sunColor = new();
     public AnimationCurve sunIntensity = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Header("Moon Settings")]
@@ -25,19 +25,19 @@ public class DayNightSettings
 
     [Header("Sky Settings")]
     public Material skyboxMaterial;
-    public Gradient skyTint = new Gradient();
+    public Gradient skyTint = new();
     public AnimationCurve skyExposure = AnimationCurve.EaseInOut(0, 0.5f, 1, 1.3f);
 
     [Header("Fog Settings")]
     public bool useFog = true;
-    public Gradient fogColor = new Gradient();
+    public Gradient fogColor = new();
     public AnimationCurve fogDensity = AnimationCurve.EaseInOut(0, 0.01f, 1, 0.05f);
 }
 
 public class DayNightCycle : MonoBehaviour
 {
     [Header("Day/Night Cycle Controller")]
-    public DayNightSettings settings = new DayNightSettings();
+    public DayNightSettings settings = new();
 
     [Header("Debug Info")]
     [SerializeField, Range(0f, 24f)]
@@ -282,7 +282,7 @@ public class DayNightCycle : MonoBehaviour
         GradientAlphaKey[] alphaKeys = new GradientAlphaKey[5];
 
         // Night -> Dawn -> Day -> Dusk -> Night (loop)
-        Color nightColor = new Color(0.2f, 0.2f, 0.4f);
+        Color nightColor = new(0.2f, 0.2f, 0.4f);
         colorKeys[0] = new GradientColorKey(nightColor, 0f);     // Night
         colorKeys[1] = new GradientColorKey(new Color(1f, 0.6f, 0.3f), 0.25f);    // Dawn
         colorKeys[2] = new GradientColorKey(new Color(1f, 0.95f, 0.8f), 0.5f);    // Day
@@ -307,7 +307,7 @@ public class DayNightCycle : MonoBehaviour
         GradientColorKey[] colorKeys = new GradientColorKey[4];
         GradientAlphaKey[] alphaKeys = new GradientAlphaKey[4];
 
-        Color nightColor = new Color(0.3f, 0.3f, 0.5f);
+        Color nightColor = new(0.3f, 0.3f, 0.5f);
         colorKeys[0] = new GradientColorKey(nightColor, 0f);     // Night
         colorKeys[1] = new GradientColorKey(new Color(0.8f, 0.5f, 0.3f), 0.3f);   // Dawn
         colorKeys[2] = new GradientColorKey(new Color(0.5f, 0.7f, 1f), 0.7f);     // Day
@@ -332,7 +332,7 @@ public class DayNightCycle : MonoBehaviour
         GradientColorKey[] colorKeys = new GradientColorKey[4];
         GradientAlphaKey[] alphaKeys = new GradientAlphaKey[4];
 
-        Color nightColor = new Color(0.1f, 0.1f, 0.2f);
+        Color nightColor = new(0.1f, 0.1f, 0.2f);
         colorKeys[0] = new GradientColorKey(nightColor, 0f);     // Night
         colorKeys[1] = new GradientColorKey(new Color(0.6f, 0.4f, 0.3f), 0.3f);   // Dawn
         colorKeys[2] = new GradientColorKey(new Color(0.7f, 0.8f, 1f), 0.7f);     // Day

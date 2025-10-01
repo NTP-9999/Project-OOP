@@ -5,7 +5,7 @@ public class FoodData : ItemData
 {
     [SerializeField] private ItemData data;
     public ItemData Data => data;
-    [SerializeField] private List<StatsEffect> statsEffects = new List<StatsEffect>();
+    [SerializeField] private List<StatsEffect> statsEffects = new();
     public List<StatsEffect> StatsEffects => statsEffects;
 
     [SerializeField] private GameObject foodPrefab;

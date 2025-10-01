@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable, CreateAssetMenu(fileName = "Recipe", menuName = "Recipe/NormalRecipe")]
 public class Recipe : ScriptableObject
 {
-    [SerializeField] private List<RequireItem> requireItems = new List<RequireItem>();
+    [SerializeField] private List<RequireItem> requireItems = new();
     public RequireItem[] RequireItems => requireItems.ToArray();
     [SerializeField] private ItemData resultItem;
     public ItemData ResultItem => resultItem;

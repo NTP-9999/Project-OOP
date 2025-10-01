@@ -6,7 +6,7 @@ public class Bed : MonoBehaviour
     private bool playerInArea;
     [SerializeField] private bool canSleep = false;
     public bool CanSleep => canSleep;
-    private List<Enemy> enemiesInArea = new List<Enemy>();
+    private List<Enemy> enemiesInArea = new();
 
     private void Update()
     {

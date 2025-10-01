@@ -12,7 +12,7 @@ public abstract class Weapon : MonoBehaviour, IPlaceableStructure
     public bool PlayerInArea { get; private set; }
     public float AttackDamage { get; private set; }
     public float AttackCooldown { get; private set; }
-    private List<Enemy> enemiesInRange = new List<Enemy>();
+    private List<Enemy> enemiesInRange = new();
     private float lastAttackTime = -Mathf.Infinity;
 
 

@@ -16,7 +16,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform itemListParent;
     [SerializeField] private GameObject inventoryUI;
     private GameObject inventoryItemUI;
-    private List<GameObject> spawnedSlots = new List<GameObject>();
+    private List<GameObject> spawnedSlots = new();
     private GameObject itemUI;
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color highlightColor = Color.gray;
@@ -24,7 +24,7 @@ public class Inventory : MonoBehaviour
     public bool Openning => openning;
 
     [Header("Inventory")]
-    [SerializeField] private List<InventoryItem> playerInventory = new List<InventoryItem>();
+    [SerializeField] private List<InventoryItem> playerInventory = new();
     public InventoryItem[] PlayerInventory => playerInventory.ToArray();
     private UnityEvent OnInventoryChanged;
     [SerializeField] private bool canAddItem;

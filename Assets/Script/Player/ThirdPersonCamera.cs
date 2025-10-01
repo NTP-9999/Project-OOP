@@ -4,7 +4,7 @@ public class ThirdPersonCamera : MonoBehaviour
 {
     [Header("Target")]
     public Transform target; // usually the player
-    public Vector3 offset = new Vector3(0f, 2f, -4f);
+    public Vector3 offset = new(0f, 2f, -4f);
 
     [Header("Settings")]
     public float rotationSpeed = 3f;
