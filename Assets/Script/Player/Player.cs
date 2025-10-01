@@ -50,9 +50,6 @@ public class Player : MonoBehaviour
     [Header("Camera Setup")]
     [SerializeField] private float rotationSpeed = 0.8f;
     [SerializeField] private float mouseSensitivity = 0.8f;
-    private float tpsYaw = 0f;
-    private float tpsPitch = 10f;
-    private Transform TpsPivot => tpsCameraPivot;
     [SerializeField] private Transform tpsCameraPivot;
 
     
