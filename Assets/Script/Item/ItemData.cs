@@ -9,4 +9,6 @@ public abstract class ItemData : ScriptableObject
     [SerializeField] public Sprite _icon;
     public ulong CoinToIncrease => _coinToIncrease;
     [SerializeField] private ulong _coinToIncrease;
+    [SerializeField] private GameObject prefab;
+    public GameObject Prefab => prefab;
 }

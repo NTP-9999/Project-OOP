@@ -175,7 +175,7 @@ public class Inventory : MonoBehaviour
 
         public void Use(ItemData item)
         {
-            if (item is FoodData food) Player.Instance.Eat(food);
+            if (item is FoodSO food) Player.Instance.Eat(food);
             else if (item is PlaceableStructureItem) Player.Instance.PlaceThing();
 
             Instance.RemoveItemFromInventory(item, 1);

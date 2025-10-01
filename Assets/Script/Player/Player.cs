@@ -15,16 +15,14 @@ public class Player : MonoBehaviour
     [Header("Player Stats")]
     [SerializeField] private float maxHealth = 100f;
     public float MaxHealth => maxHealth = 100f;
-    [SerializeField] private float health = 100f;
-    public float Health => health = 100f;
+    public float Health = 100f;
     [SerializeField] private float maxStamina = 100f;
     public float MaxStamina => maxStamina;
-    private float stamina = 100f;
+    [SerializeField] private float stamina = 100f;
     public float Stamina => stamina = 100f;
     [SerializeField] private int maxHungry = 100;
     public int MaxHungry => maxHungry;
-    private int hungry = 100;
-    public int Hungry => hungry;
+    public int Hungry = 100;
     [SerializeField] private int maxFatigue = 3;
     public int MaxFatigue => maxFatigue;
     private int fatigue = 3;
@@ -85,33 +83,28 @@ public class Player : MonoBehaviour
     {
         if (canMove) HandleMovement();
         if (Input.GetMouseButtonDown(0)) Punch();
+        if (Health > maxHealth) Health = maxHealth;
+        if (stamina > maxStamina) stamina = maxStamina;
+        if (Hungry > maxHungry) Hungry = maxHungry;
+        if (fatigue > maxFatigue) fatigue = maxFatigue;
+
+        if (CurrentHoldItem is ItemData itemData)
+        {
+            Instantiate(itemData.Prefab, transform.position + transform.forward + Vector3.up, Quaternion.identity);
+        }
     }
 
-    public void Eat(FoodData food)
+    public void Eat(FoodSO food)
     {
-        foreach (var effect in food.StatsEffects)
-        {
-            switch (effect.playerstats)
-            {
-                case FoodData.StatsEffect.PlayerStats.health:
-                    health += effect.amount;
-                    if (health > maxHealth) health = maxHealth;
-                    break;
-
-                case FoodData.StatsEffect.PlayerStats.hungry:
-                    hungry += (int)effect.amount;
-                    if (hungry > maxHungry) hungry = maxHungry;
-                    break;
-            }
-        }
+        food.Eat();
     }
 
     public void TakeDamage(float amount)
     {
         if (isDead) return;
 
-        if (!isDead) health -= amount;
-        if (health <= 0) Die();
+        if (!isDead) Health -= amount;
+        if (Health <= 0) Die();
     }
 
     private void Die()
