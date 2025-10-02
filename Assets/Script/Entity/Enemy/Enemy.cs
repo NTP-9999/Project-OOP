@@ -1,34 +1,58 @@
 using UnityEngine;
 using System.Collections;
 
-public class Enemy : EntityBase   // or : MonoBehaviour, IEntity
+public class Enemy : EntityBase   // inherits IEntity via EntityBase
 {
-    [SerializeField] private float attackDamage = 10f;
+    [Header("Base Stats")]
+    [SerializeField] private float baseHealth = 100f;
+    [SerializeField] private float baseDamage = 10f;
+    [SerializeField] private float baseSpeed = 2f;
+
+    [Header("Attack Settings")]
     [SerializeField] private float attackCooldown = 1.5f;
-    [SerializeField] private float attackRange = 5f;
-    [SerializeField] private bool canAttack = false;
+    [SerializeField] private float attackRange = 2f;
+    private bool canAttack = false;
     public bool CanAttack => canAttack;
+
+    // Runtime values (scaled per wave)
+    private float currentDamage;
+    private float currentSpeed;
 
     private Transform target;
 
+    // --- Init enemy stats each night ---
+    public void InitStats(int difficulty)
+    {
+        Health = baseHealth * difficulty;               // from EntityBase
+        currentDamage = baseDamage * difficulty;        // stronger attack
+        currentSpeed = baseSpeed + (0.2f * difficulty); // slight speed increase
+    }
+
     public override void Move()
     {
-        // Move toward target if any
         if (target != null)
         {
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 target.position,
-                Time.deltaTime * 2f
+                Time.deltaTime * currentSpeed
             );
         }
     }
 
     public void Attack()
     {
-        if (!canAttack) return;
+        if (!canAttack || target == null) return;
+
         // Immediate attack logic
-        Debug.Log($"{name} attacks for {attackDamage} damage.");
+        Debug.Log($"{name} attacks {target.name} for {currentDamage} damage.");
+
+        // Example: if the target also implements IEntity, deal damage
+        IEntity entity = target.GetComponent<IEntity>();
+        if (entity != null)
+        {
+            entity.TakeDamage(currentDamage);
+        }
     }
 
     public IEnumerator AttackIE()
@@ -43,5 +67,6 @@ public class Enemy : EntityBase   // or : MonoBehaviour, IEntity
     public void SetTarget(Transform newTarget)
     {
         target = newTarget;
+        canAttack = true; // allow attack once target is assigned
     }
 }

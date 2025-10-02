@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     [Header("Enemy Settings")]
     public Enemy enemyPrefab;
     public Transform[] spawnPoints;
+    [SerializeField] private float spawnDelay = 1f; // delay between spawns
 
     private void Awake()
     {
@@ -32,7 +34,6 @@ public class GameManager : MonoBehaviour
         DayNightCycle cycle = FindObjectOfType<DayNightCycle>();
         if (cycle != null)
         {
-            // Hook into its events
             cycle.OnSunset.AddListener(StartNight);
             cycle.OnSunrise.AddListener(StartDay);
             cycle.OnNewDay.AddListener(NewDay);
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
     {
         isNight = true;
         Debug.Log($"🌙 Night {currentDay} begins!");
-        SpawnEnemyWave();
+        StartCoroutine(SpawnEnemyWave());
     }
 
     private void StartDay()
@@ -64,7 +65,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"📈 Difficulty increased → {difficulty}");
     }
 
-    private void SpawnEnemyWave()
+    private IEnumerator SpawnEnemyWave()
     {
         int enemiesToSpawn = currentDay * 2; // formula, tweak as needed
 
@@ -72,9 +73,15 @@ public class GameManager : MonoBehaviour
         {
             Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
             Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-            //newEnemy.InitStats(difficulty);
+
+            // If you want to scale stats:
+            // newEnemy.InitStats(difficulty);
+
+            Debug.Log($"Spawned enemy {i + 1}/{enemiesToSpawn} at {spawnPoint.name}");
+
+            yield return new WaitForSeconds(spawnDelay); // wait before spawning next
         }
 
-        Debug.Log($"Spawned {enemiesToSpawn} enemies for Night {currentDay}.");
+        Debug.Log($"✅ Finished spawning {enemiesToSpawn} enemies for Night {currentDay}.");
     }
 }
