@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
-public class Resouce : MonoBehaviour
+public class Resource : MonoBehaviour
 {
+    public static Resource Instance { get; private set; }
+
     [SerializeField] private float maxHealth = 3f;
     public float MaxHealth => maxHealth;
     [SerializeField] private float health = 3f;
@@ -13,8 +15,8 @@ public class Resouce : MonoBehaviour
     [SerializeField] private bool playerInRange;
     public bool PlayerInRange => playerInRange;
     
-    [SerializeField] private ItemSO data;
-    public ItemSO Data => data;
+    [SerializeField] private ResourceSO data;
+    public ResourceSO Data => data;
 
     private float lastHitTime = -Mathf.Infinity;
     
@@ -31,7 +33,7 @@ public class Resouce : MonoBehaviour
         }
     }
     
-    protected void Hit()
+    private void Hit()
     {
         if(!playerInRange) return;
         
@@ -44,6 +46,7 @@ public class Resouce : MonoBehaviour
     
     protected void Destroy()
     {
+        Inventory.Instance.AddItemToInventory(data, Random.Range(1, 3));
         Destroy(gameObject);
     }
     

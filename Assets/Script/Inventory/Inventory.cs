@@ -27,7 +27,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private List<InventoryItem> playerInventory = new();
     public InventoryItem[] PlayerInventory => playerInventory.ToArray();
     private UnityEvent OnInventoryChanged;
-    [SerializeField] private bool canAddItem;
+    [SerializeField] private bool canAddItem = true;
     public bool CanAddItem => canAddItem;
     private int currentSelectedIndex = 0;
     private InventoryItem CurrentSelectedItem => playerInventory.Count > 0 ? playerInventory[currentSelectedIndex] : null;
@@ -39,6 +39,12 @@ public class Inventory : MonoBehaviour
 
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        LoadUI();
+        OnInventoryChanged.AddListener(LoadUI);
     }
 
     private void Update()
@@ -128,6 +134,8 @@ public class Inventory : MonoBehaviour
 
     public ItemSO GetHoldItem()
     {
+        if(CurrentSelectedItem == null) return null;
+
         ItemSO item = CurrentSelectedItem.Item;
         return item;
     }

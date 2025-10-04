@@ -7,8 +7,6 @@ public abstract class ItemSO : ScriptableObject
     [SerializeField] private string _name;
     public Sprite Icon => _icon;
     [SerializeField] public Sprite _icon;
-    public ulong CoinToIncrease => _coinToIncrease;
-    [SerializeField] private ulong _coinToIncrease;
     [SerializeField] private GameObject prefab;
     public GameObject Prefab => prefab;
 }

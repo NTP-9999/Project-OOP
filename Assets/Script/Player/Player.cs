@@ -117,16 +117,15 @@ public class Player : MonoBehaviour
     }
 
 
-    public void Harvest(ItemSO resource) => StartCoroutine(HarvestIE(resource));
+    public void Harvest(ResourceSO resource) => StartCoroutine(HarvestIE(resource));
 
 
-    private IEnumerator HarvestIE(ItemSO resource)
+    private IEnumerator HarvestIE(ResourceSO resource)
     {
         if (resource is not ResourceSO resourceSO) yield break;
 
         canMove = false;
 
-        Inventory.Instance.AddItemToInventory(resourceSO, 1);
         yield return new WaitForSeconds(resourceSO.Duration);
 
         canMove = true;
