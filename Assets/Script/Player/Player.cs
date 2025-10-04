@@ -117,10 +117,10 @@ public class Player : MonoBehaviour
     }
 
 
-    public void Harvest(ResourceSO resource) => StartCoroutine(HarvestIE(resource));
+    public void Harvest(ItemSO resource) => StartCoroutine(HarvestIE(resource));
 
 
-    private IEnumerator HarvestIE(ResourceSO resource)
+    private IEnumerator HarvestIE(ItemSO resource)
     {
         if (resource is not ResourceSO resourceSO) yield break;
 

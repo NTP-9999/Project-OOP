@@ -15,8 +15,8 @@ public class Resource : MonoBehaviour
     [SerializeField] private bool playerInRange;
     public bool PlayerInRange => playerInRange;
     
-    [SerializeField] private ResourceSO data;
-    public ResourceSO Data => data;
+    [SerializeField] private ItemSO data;
+    public ItemSO Data => data;
 
     private float lastHitTime = -Mathf.Infinity;
     

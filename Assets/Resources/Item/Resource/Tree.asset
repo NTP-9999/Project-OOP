@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bd4b771c05334d5694a3da6adbd2e6d, type: 3}
   m_Name: Tree
   m_EditorClassIdentifier: 
-  _name: 
-  _icon: {fileID: 0}
-  _coinToIncrease: 0
+  _name: Tree
+  _icon: {fileID: 21300000, guid: cfecb710afdd59e45b191a9f974d6db6, type: 3}
   prefab: {fileID: 0}
   duration: 3

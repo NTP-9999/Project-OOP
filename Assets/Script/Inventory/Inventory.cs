@@ -43,6 +43,7 @@ public class Inventory : MonoBehaviour
 
     private void Start()
     {
+        OnInventoryChanged = new UnityEvent();
         LoadUI();
         OnInventoryChanged.AddListener(LoadUI);
     }
