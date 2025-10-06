@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Base : MonoBehaviour, IEntity
 {
@@ -9,12 +10,30 @@ public class Base : MonoBehaviour, IEntity
     public float Health
     {
         get => currentHealth;
-        set => currentHealth = Mathf.Clamp(value, 0, maxHealth);
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0, maxHealth);
+            UpdateHealthUI();
+        }
     }
+
+    [Header("UI Settings")]
+    [SerializeField] private Slider healthBar;
+    [SerializeField] private GameObject healthBarUI;
 
     private void Start()
     {
         currentHealth = maxHealth;
+        UpdateHealthUI();
+    }
+
+    private void UpdateHealthUI()
+    {
+        if (healthBar != null)
+        {
+            healthBar.maxValue = maxHealth;
+            healthBar.value = currentHealth;
+        }
     }
 
     // IEntity methods
@@ -26,10 +45,14 @@ public class Base : MonoBehaviour, IEntity
     public void TakeDamage(float amount)
     {
         Health -= amount;
+        UpdateHealthUI();
         Debug.Log($"🏠 House took {amount} damage! Remaining health: {Health}");
 
         if (Health <= 0)
+        {
             Die();
+            healthBarUI.SetActive(false);
+        }
     }
 
     public void Die()
