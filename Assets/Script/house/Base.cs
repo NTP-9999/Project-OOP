@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class House : MonoBehaviour, IEntity
+public class Base : MonoBehaviour, IEntity
 {
     [Header("House Settings")]
     [SerializeField] private float maxHealth = 500f;
