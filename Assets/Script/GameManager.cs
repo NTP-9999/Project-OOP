@@ -6,13 +6,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Game State")]
+    private Base house;
     public int currentDay = 1;
     public int difficulty = 1;
     public bool isNight = false;
 
     [Header("Enemy Settings")]
-    public Enemy enemyPrefab;
-    public Transform[] spawnPoints;
+    private Enemy enemyPrefab;
+    [SerializeField] private float distance = 10f;
     [SerializeField] private float spawnDelay = 1f; // delay between spawns
 
     private void Awake()
@@ -38,6 +39,9 @@ public class GameManager : MonoBehaviour
             cycle.OnSunrise.AddListener(StartDay);
             cycle.OnNewDay.AddListener(NewDay);
         }
+        enemyPrefab = Resources.Load<Enemy>("Prefabs/Enemy");
+
+        house = FindObjectOfType<Base>();
     }
 
     private void StartNight()
@@ -71,17 +75,21 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
-
-            // If you want to scale stats:
-            // newEnemy.InitStats(difficulty);
-
-            Debug.Log($"Spawned enemy {i + 1}/{enemiesToSpawn} at {spawnPoint.name}");
+            Vector3 spawnPos = GetRandomPointOnCircle(house.transform.position, distance);
+            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
 
             yield return new WaitForSeconds(spawnDelay); // wait before spawning next
         }
 
         Debug.Log($"✅ Finished spawning {enemiesToSpawn} enemies for Night {currentDay}.");
+    }
+
+    private Vector3 GetRandomPointOnCircle(Vector3 center, float radius)
+    {
+        float angle = Random.Range(0f, Mathf.PI * 2f);
+        float x = Mathf.Cos(angle) * radius;
+        float z = Mathf.Sin(angle) * radius;
+        
+        return new Vector3(center.x + x, center.y, center.z + z);
     }
 }
