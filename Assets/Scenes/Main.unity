@@ -1097,7 +1097,7 @@ MonoBehaviour:
   currentDay: 1
   difficulty: 1
   isNight: 0
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 2950410459805568493, guid: 95f3e291962c4c44eaeb827ab3398e67, type: 3}
   spawnPoints: []
   spawnDelay: 1
 --- !u!4 &1099295209
