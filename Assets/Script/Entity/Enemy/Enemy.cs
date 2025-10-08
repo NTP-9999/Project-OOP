@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Enemy : EntityBase   // inherits IEntity via EntityBase
+public class Enemy : EntityBase
 {
     [Header("Base Stats")]
     [SerializeField] private float baseHealth = 100f;
@@ -12,61 +12,129 @@ public class Enemy : EntityBase   // inherits IEntity via EntityBase
     [SerializeField] private float attackCooldown = 1.5f;
     [SerializeField] private float attackRange = 2f;
     private bool canAttack = false;
-    public bool CanAttack => canAttack;
 
-    // Runtime values (scaled per wave)
+    // Runtime scaled values
     private float currentDamage;
     private float currentSpeed;
 
-    private Transform target;
+    // Target references
+    private Transform target;       // current target (Base or Tower)
+    private Transform baseTarget;   // permanent reference to Base
+    private bool chasingStructure = false;
 
-    // --- Init enemy stats each night ---
+    private Coroutine attackRoutine;
+
+    // --- Initialization ---
     public void InitStats(int difficulty)
     {
-        Health = baseHealth * difficulty;               // from EntityBase
-        currentDamage = baseDamage * difficulty;        // stronger attack
-        currentSpeed = baseSpeed + (0.2f * difficulty); // slight speed increase
+        Health = baseHealth * difficulty;
+        currentDamage = baseDamage * difficulty;
+        currentSpeed = baseSpeed + (0.2f * difficulty);
     }
 
+    private void Start()
+    {
+        // Set base as default target
+        Base baseObj = FindFirstObjectByType<Base>();
+        if (baseObj != null)
+        {
+            baseTarget = baseObj.transform;
+            target = baseTarget;
+        }
+
+        attackRoutine = StartCoroutine(AttackLoop());
+    }
+
+    private void Update()
+    {
+        Move();
+    }
+
+    // --- IEntity override ---
     public override void Move()
     {
-        if (target != null)
+        if (target == null) return;
+
+        // Smoothly rotate toward target
+        Vector3 direction = (target.position - transform.position).normalized;
+        if (direction != Vector3.zero)
         {
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                target.position,
-                Time.deltaTime * currentSpeed
-            );
+            Quaternion lookRot = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 5f);
         }
+
+        // Move toward target
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            target.position,
+            Time.deltaTime * currentSpeed
+        );
+
+        // Check if in attack range
+        float distance = Vector3.Distance(transform.position, target.position);
+        canAttack = distance <= attackRange;
     }
 
-    public void Attack()
-    {
-        if (!canAttack || target == null) return;
-
-        // Immediate attack logic
-        Debug.Log($"{name} attacks {target.name} for {currentDamage} damage.");
-
-        // Example: if the target also implements IEntity, deal damage
-        IEntity entity = target.GetComponent<IEntity>();
-        if (entity != null)
-        {
-            entity.TakeDamage(currentDamage);
-        }
-    }
-
-    public IEnumerator AttackIE()
+    private IEnumerator AttackLoop()
     {
         while (true)
         {
-            Attack();
+            if (canAttack && target != null)
+            {
+                Attack();
+            }
             yield return new WaitForSeconds(attackCooldown);
         }
     }
 
-    public void SetTarget(Transform newTarget)
+    private void Attack()
     {
-        target = newTarget;
-        canAttack = true; // allow attack once target is assigned
+        if (target == null) return;
+
+        IEntity entity = target.GetComponent<IEntity>();
+        if (entity != null)
+        {
+            entity.TakeDamage(currentDamage);
+            Debug.Log($"{name} attacks {target.name} for {currentDamage} damage!");
+        }
+    }
+
+    // --- Target Switching ---
+    public void OnAttackedBy(Transform attacker)
+    {
+        // If tower attacks this enemy
+        IPlaceableStructure structure = attacker.GetComponent<IPlaceableStructure>();
+        if (structure != null && !chasingStructure)
+        {
+            target = attacker;
+            chasingStructure = true;
+            Debug.Log($"{name} switched target to {attacker.name}!");
+        }
+    }
+
+    public void OnTargetDestroyed(Transform destroyedTarget)
+    {
+        if (chasingStructure && destroyedTarget == target)
+        {
+            ReturnToBase();
+        }
+    }
+
+    private void ReturnToBase()
+    {
+        if (baseTarget != null)
+        {
+            target = baseTarget;
+            chasingStructure = false;
+            Debug.Log($"{name} returns to attack the base!");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+        }
     }
 }
