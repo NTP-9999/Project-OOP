@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
     public int currentDay = 1;
     public int difficulty = 1;
-    public bool isNight = false;
+    public bool isNight = true;
 
     [Header("Enemy Settings")]
     public Enemy enemyPrefab;
@@ -17,8 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float enemySpawnDelay = 1f;
 
     [Header("Animal Settings")]
-    public Animal animalPrefab;
-    public Transform[] animalSpawnPoints;
+    [SerializeField] private Animal animalPrefab;
     [SerializeField] private float animalSpawnDelay = 2f;
 
     private void Awake()
@@ -75,6 +74,8 @@ public class GameManager : MonoBehaviour
     // -------------------------
     // Enemy Spawning
     // -------------------------
+
+    public void SpawnEnemyWaves() => StartCoroutine(SpawnEnemyWave());
     private IEnumerator SpawnEnemyWave()
     {
         int enemiesToSpawn = currentDay * 2; // scale enemy count

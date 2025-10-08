@@ -1189,22 +1189,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentDay: 1
   difficulty: 1
-  isNight: 0
-  enemyPrefab: {fileID: 0}
-  enemySpawnPoints:
-  - {fileID: 838883924}
-  - {fileID: 477198081}
-  - {fileID: 1127118293}
-  - {fileID: 1736275064}
-  - {fileID: 978485693}
+  isNight: 1
+  enemyPrefab: {fileID: 2950410459805568493, guid: 95f3e291962c4c44eaeb827ab3398e67, type: 3}
+  distanceFromHouse: 20
   enemySpawnDelay: 1
   animalPrefab: {fileID: 0}
-  animalSpawnPoints:
-  - {fileID: 838883924}
-  - {fileID: 477198081}
-  - {fileID: 1127118293}
-  - {fileID: 1736275064}
-  - {fileID: 978485693}
   animalSpawnDelay: 2
 --- !u!4 &1099295209
 Transform:
