@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Enemy Settings")]
     public Enemy enemyPrefab;
-    public Transform[] enemySpawnPoints;
+    private Base house;
+    [SerializeField] private float distanceFromHouse = 20f;
     [SerializeField] private float enemySpawnDelay = 1f;
 
     [Header("Animal Settings")]
@@ -41,6 +42,8 @@ public class GameManager : MonoBehaviour
             cycle.OnSunrise.AddListener(StartDay);
             cycle.OnNewDay.AddListener(NewDay);
         }
+
+        house = FindFirstObjectByType<Base>();
     }
 
     private void StartNight()
@@ -78,8 +81,8 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            Transform spawnPoint = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)];
-            Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+            Vector3 spawnPoint = GetRandomPointOnCircle(house.transform.position, distanceFromHouse);
+            Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
             // newEnemy.InitStats(difficulty);
 
             yield return new WaitForSeconds(enemySpawnDelay);
@@ -98,14 +101,34 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < animalsToSpawn; i++)
         {
-            Transform spawnPoint = animalSpawnPoints[Random.Range(0, animalSpawnPoints.Length)];
-            Animal newAnimal = Instantiate(animalPrefab, spawnPoint.position, Quaternion.identity);
-
-            Debug.Log($"Spawned animal {i + 1}/{animalsToSpawn} at {spawnPoint.name}");
+            Vector3 spawnPoint = GetRandomPointInCircle(house.transform.position, distanceFromHouse / 2f);
+            Instantiate(animalPrefab, spawnPoint, Quaternion.identity);
 
             yield return new WaitForSeconds(animalSpawnDelay);
         }
 
         Debug.Log($"✅ Finished spawning {animalsToSpawn} animals for Day {currentDay}.");
     }
+
+    Vector3 GetRandomPointOnCircle(Vector3 center, float radius)
+    {
+        float angle = Random.Range(0f, Mathf.PI * 2f);
+        float x = Mathf.Cos(angle) * radius;
+        float z = Mathf.Sin(angle) * radius;
+
+        return new Vector3(center.x + x, center.y, center.z + z);
+    }
+
+    Vector3 GetRandomPointInCircle(Vector3 center, float radius)
+    {
+        float angle = Random.Range(0f, Mathf.PI * 2f);
+
+        float r = Mathf.Sqrt(Random.Range(0f, 1f)) * radius;
+
+        float x = Mathf.Cos(angle) * r;
+        float z = Mathf.Sin(angle) * r;
+
+        return new Vector3(center.x + x, center.y, center.z + z);
+    }
+
 }

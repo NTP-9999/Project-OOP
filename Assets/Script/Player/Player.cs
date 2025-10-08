@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
 
 
     private Rigidbody rb;
+    private Animator animator;
 
 
     public void Awake()
@@ -63,6 +64,7 @@ public class Player : MonoBehaviour
         else Destroy(gameObject);
 
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -175,6 +177,9 @@ public class Player : MonoBehaviour
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
+        animator.SetFloat("MoveX", moveX);
+        animator.SetFloat("MoveY", moveZ);
+
         Vector3 camForward = Camera.main.transform.forward;
         Vector3 camRight = Camera.main.transform.right;
 
@@ -197,7 +202,9 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            animator.SetTrigger("Jump");
         }
+        animator.SetBool("IsGrounded", isGrounded);
     }
 
     void OnCollisionEnter(Collision collision)
