@@ -74,8 +74,6 @@ public class GameManager : MonoBehaviour
     // -------------------------
     // Enemy Spawning
     // -------------------------
-
-    public void SpawnEnemyWaves() => StartCoroutine(SpawnEnemyWave());
     private IEnumerator SpawnEnemyWave()
     {
         int enemiesToSpawn = currentDay * 2; // scale enemy count
