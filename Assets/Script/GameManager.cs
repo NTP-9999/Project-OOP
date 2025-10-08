@@ -6,15 +6,19 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Game State")]
-    private Base house;
     public int currentDay = 1;
     public int difficulty = 1;
     public bool isNight = false;
 
     [Header("Enemy Settings")]
-    private Enemy enemyPrefab;
-    [SerializeField] private float distance = 10f;
-    [SerializeField] private float spawnDelay = 1f; // delay between spawns
+    public Enemy enemyPrefab;
+    public Transform[] enemySpawnPoints;
+    [SerializeField] private float enemySpawnDelay = 1f;
+
+    [Header("Animal Settings")]
+    public Animal animalPrefab;
+    public Transform[] animalSpawnPoints;
+    [SerializeField] private float animalSpawnDelay = 2f;
 
     private void Awake()
     {
@@ -28,20 +32,15 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    [System.Obsolete]
     private void Start()
     {
-        // Find the DayNightCycle in scene
-        DayNightCycle cycle = FindObjectOfType<DayNightCycle>();
+        DayNightCycle cycle = FindFirstObjectByType<DayNightCycle>();
         if (cycle != null)
         {
             cycle.OnSunset.AddListener(StartNight);
             cycle.OnSunrise.AddListener(StartDay);
             cycle.OnNewDay.AddListener(NewDay);
         }
-        enemyPrefab = Resources.Load<Enemy>("Prefabs/Enemy");
-
-        house = FindObjectOfType<Base>();
     }
 
     private void StartNight()
@@ -54,7 +53,8 @@ public class GameManager : MonoBehaviour
     private void StartDay()
     {
         isNight = false;
-        Debug.Log("☀️ Daytime is here, enemies stop spawning.");
+        Debug.Log($"☀️ Day {currentDay} begins! Animals will spawn...");
+        StartCoroutine(SpawnAnimals());
     }
 
     private void NewDay()
@@ -69,27 +69,43 @@ public class GameManager : MonoBehaviour
         Debug.Log($"📈 Difficulty increased → {difficulty}");
     }
 
+    // -------------------------
+    // Enemy Spawning
+    // -------------------------
     private IEnumerator SpawnEnemyWave()
     {
-        int enemiesToSpawn = currentDay * 2; // formula, tweak as needed
+        int enemiesToSpawn = currentDay * 2; // scale enemy count
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            Vector3 spawnPos = GetRandomPointOnCircle(house.transform.position, distance);
-            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            Transform spawnPoint = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)];
+            Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+            // newEnemy.InitStats(difficulty);
 
-            yield return new WaitForSeconds(spawnDelay); // wait before spawning next
+            yield return new WaitForSeconds(enemySpawnDelay);
         }
 
         Debug.Log($"✅ Finished spawning {enemiesToSpawn} enemies for Night {currentDay}.");
     }
 
-    private Vector3 GetRandomPointOnCircle(Vector3 center, float radius)
+    // -------------------------
+    // Animal Spawning
+    // -------------------------
+    private IEnumerator SpawnAnimals()
     {
-        float angle = Random.Range(0f, Mathf.PI * 2f);
-        float x = Mathf.Cos(angle) * radius;
-        float z = Mathf.Sin(angle) * radius;
-        
-        return new Vector3(center.x + x, center.y, center.z + z);
+        // Example: fewer animals than enemies
+        int animalsToSpawn = Mathf.Max(1, currentDay); // at least 1, then scale slowly
+
+        for (int i = 0; i < animalsToSpawn; i++)
+        {
+            Transform spawnPoint = animalSpawnPoints[Random.Range(0, animalSpawnPoints.Length)];
+            Animal newAnimal = Instantiate(animalPrefab, spawnPoint.position, Quaternion.identity);
+
+            Debug.Log($"Spawned animal {i + 1}/{animalsToSpawn} at {spawnPoint.name}");
+
+            yield return new WaitForSeconds(animalSpawnDelay);
+        }
+
+        Debug.Log($"✅ Finished spawning {animalsToSpawn} animals for Day {currentDay}.");
     }
 }
