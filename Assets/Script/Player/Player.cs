@@ -30,6 +30,14 @@ public class Player : MonoBehaviour
     public bool IsDead => isDead;
 
 
+    [Header("Stats Settings")]
+    [SerializeField] private float secoundPerHungry = 60f;
+    [SerializeField] private float staminaRegenRate = 10f;
+    [SerializeField] private float staminaDrainRate = 2f;
+    private float hungryTimer;
+    private float staminaRegenTimer = 0f;
+
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
     public float MoveSpeed => moveSpeed;
@@ -39,6 +47,8 @@ public class Player : MonoBehaviour
     public bool IsGrounded => isGrounded;
     [SerializeField] private bool canMove = true;
     public bool CanMove => canMove;
+    [SerializeField] private bool isRunning;
+    public bool IsRunning => isRunning;
 
 
     [Header("Camera Setup")]
@@ -80,6 +90,14 @@ public class Player : MonoBehaviour
         if (stamina > maxStamina) stamina = maxStamina;
         if (Hungry > maxHungry) Hungry = maxHungry;
         if (fatigue > maxFatigue) fatigue = maxFatigue;
+
+        hungryTimer += Time.deltaTime;
+        if (hungryTimer >= secoundPerHungry)
+        {
+            hungryTimer = 0f;
+            Hungry--;
+            if (Hungry <= 0) Die();
+        }
 
         Debug.Log($"CurrentHoldItem is {CurrentHoldItem}");
         Debug.Log($"isGrounded is {isGrounded}");
@@ -178,7 +196,7 @@ public class Player : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         animator.SetFloat("MoveX", moveX);
-        animator.SetFloat("MoveY", moveZ);
+        animator.SetFloat("MoveY", isRunning ? moveZ * 2f : moveZ);
 
         Vector3 camForward = Camera.main.transform.forward;
         Vector3 camRight = Camera.main.transform.right;
@@ -204,6 +222,38 @@ public class Player : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             animator.SetTrigger("Jump");
         }
+
+        if (Input.GetKey(KeyCode.LeftShift) && stamina > 0 && moveZ > 0)
+        {
+            rb.linearVelocity = new Vector3(moveDir.x * moveSpeed * 1.5f, velocity.y, moveDir.z * moveSpeed * 1.5f);
+            stamina -= staminaDrainRate * Time.deltaTime;
+            staminaRegenTimer = 0f;
+
+            if (stamina < 0) stamina = 0;
+            
+            isRunning = true;
+            animator.SetBool("IsRunning", true);
+        }
+        else
+        {
+            rb.linearVelocity = new Vector3(moveDir.x * moveSpeed, velocity.y, moveDir.z * moveSpeed);
+
+            if (stamina < maxStamina)
+            {
+                if (staminaRegenTimer < 0.77f)
+                {
+                    staminaRegenTimer += Time.deltaTime;
+                }
+                else
+                {
+                    stamina += staminaRegenRate * Time.deltaTime;
+                    if (stamina > maxStamina) stamina = maxStamina;
+                }
+            }
+            isRunning = false;
+            animator.SetBool("IsRunning", false);
+        }
+
         animator.SetBool("IsGrounded", isGrounded);
     }
 

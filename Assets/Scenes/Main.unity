@@ -2080,7 +2080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     timeSpeed: 0.1
-    startTime: 6
+    startTime: 10
     sunLight: {fileID: 410087040}
     sunColor:
       serializedVersion: 2
@@ -2681,6 +2681,10 @@ PrefabInstance:
     - target: {fileID: 118546618963993640, guid: 998da8668ca0842ea9b48cbfb3c4c31b, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 157726508931550346, guid: 998da8668ca0842ea9b48cbfb3c4c31b, type: 3}
+      propertyPath: staminaDrainRate
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6176910833667538903, guid: 998da8668ca0842ea9b48cbfb3c4c31b, type: 3}
       propertyPath: m_LocalPosition.x

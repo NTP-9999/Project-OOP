@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
         house = FindObjectOfType<Base>();
         enemyPrefab = Resources.Load<Enemy>("Prefabs/Enemy");
         animalPrefab = Resources.Load<Animal>("Prefabs/Deer");
+
+        StartDay();
     }
 
     private void StartNight()
