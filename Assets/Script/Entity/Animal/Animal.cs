@@ -3,7 +3,6 @@ using UnityEngine;
 public class Animal : MonoBehaviour, IEntity
 {
     [Header("Animal Info")]
-    [SerializeField] private string id = "Animal01";   // unique ID if needed
     [SerializeField] private ItemSO itemDrop;          // item it drops
     [SerializeField] private int dropAmount = 1;
 
@@ -32,14 +31,12 @@ public class Animal : MonoBehaviour, IEntity
     public void TakeDamage(float amount)
     {
         Health -= amount;
-        Debug.Log($"{id} took {amount} damage. Health left: {Health}");
 
         if (Health <= 0) Die();
     }
 
     public void Die()
     {
-        Debug.Log($"{id} has died.");
         AddItem();
         Destroy(gameObject);
     }

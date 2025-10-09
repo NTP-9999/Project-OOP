@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "FoodData", menuName = "Item/FoodData")]
 public class FoodSO : ItemSO
 {
-    [SerializeField] private ItemSO data;
-    public ItemSO Data => data;
     [SerializeField] private List<StatsEffect> statsEffects = new();
     public List<StatsEffect> StatsEffects => statsEffects;
 
