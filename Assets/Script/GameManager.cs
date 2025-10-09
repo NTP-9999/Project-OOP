@@ -6,18 +6,19 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Game State")]
+    private Base house;
     public int currentDay = 1;
     public int difficulty = 1;
     public bool isNight = true;
 
     [Header("Enemy Settings")]
     public Enemy enemyPrefab;
-    private Base house;
-    [SerializeField] private float distanceFromHouse = 20f;
+    public Transform[] enemySpawnPoints;
     [SerializeField] private float enemySpawnDelay = 1f;
 
     [Header("Animal Settings")]
-    [SerializeField] private Animal animalPrefab;
+    public Animal animalPrefab;
+    public Transform[] animalSpawnPoints;
     [SerializeField] private float animalSpawnDelay = 2f;
 
     private void Awake()
@@ -32,17 +33,17 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    [System.Obsolete]
     private void Start()
     {
-        DayNightCycle cycle = FindFirstObjectByType<DayNightCycle>();
+        // Find the DayNightCycle in scene
+        DayNightCycle cycle = FindObjectOfType<DayNightCycle>();
         if (cycle != null)
         {
             cycle.OnSunset.AddListener(StartNight);
             cycle.OnSunrise.AddListener(StartDay);
             cycle.OnNewDay.AddListener(NewDay);
         }
-
-        house = FindFirstObjectByType<Base>();
     }
 
     private void StartNight()
@@ -55,8 +56,7 @@ public class GameManager : MonoBehaviour
     private void StartDay()
     {
         isNight = false;
-        Debug.Log($"☀️ Day {currentDay} begins! Animals will spawn...");
-        StartCoroutine(SpawnAnimals());
+        Debug.Log("☀️ Daytime is here, enemies stop spawning.");
     }
 
     private void NewDay()
@@ -71,20 +71,17 @@ public class GameManager : MonoBehaviour
         Debug.Log($"📈 Difficulty increased → {difficulty}");
     }
 
-    // -------------------------
-    // Enemy Spawning
-    // -------------------------
     private IEnumerator SpawnEnemyWave()
     {
-        int enemiesToSpawn = currentDay * 2; // scale enemy count
+        int enemiesToSpawn = currentDay * 2; // formula, tweak as needed
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            Vector3 spawnPoint = GetRandomPointOnCircle(house.transform.position, distanceFromHouse);
-            Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
+            Transform spawnPoint = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)];
+            Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
             // newEnemy.InitStats(difficulty);
 
-            yield return new WaitForSeconds(enemySpawnDelay);
+            yield return new WaitForSeconds(enemySpawnDelay); // wait before spawning next
         }
 
         Debug.Log($"✅ Finished spawning {enemiesToSpawn} enemies for Night {currentDay}.");
@@ -100,8 +97,10 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < animalsToSpawn; i++)
         {
-            Vector3 spawnPoint = GetRandomPointInCircle(house.transform.position, distanceFromHouse / 2f);
-            Instantiate(animalPrefab, spawnPoint, Quaternion.identity);
+            Transform spawnPoint = animalSpawnPoints[Random.Range(0, animalSpawnPoints.Length)];
+            Animal newAnimal = Instantiate(animalPrefab, spawnPoint.position, Quaternion.identity);
+
+            Debug.Log($"Spawned animal {i + 1}/{animalsToSpawn} at {spawnPoint.name}");
 
             yield return new WaitForSeconds(animalSpawnDelay);
         }
