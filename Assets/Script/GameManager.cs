@@ -14,13 +14,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Enemy Settings")]
     public Enemy enemyPrefab;
-    public Transform[] enemySpawnPoints;
-    [SerializeField] private float enemySpawnDelay = 1f;
-
     [Header("Animal Settings")]
     public Animal animalPrefab;
-    public Transform[] animalSpawnPoints;
-    [SerializeField] private float animalSpawnDelay = 2f;
 
     private void Awake()
     {
@@ -85,7 +80,7 @@ public class GameManager : MonoBehaviour
             Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
             // newEnemy.InitStats(difficulty);
 
-            yield return new WaitForSeconds(enemySpawnDelay); // wait before spawning next
+            yield return new WaitForSeconds(Random.Range(1f, 3f)); // wait before spawning next
         }
 
         Debug.Log($"✅ Finished spawning {enemiesToSpawn} enemies for Night {currentDay}.");
@@ -104,7 +99,7 @@ public class GameManager : MonoBehaviour
             Vector3 spawnPoint = GetRandomPointInCircle(house.transform.position, distanceFromHouse - 5f); // within a smaller radius
             Animal newAnimal = Instantiate(animalPrefab, spawnPoint, Quaternion.identity);
 
-            yield return new WaitForSeconds(animalSpawnDelay);
+            yield return new WaitForSeconds(Random.Range(1f, 3f));
         }
 
         Debug.Log($"✅ Finished spawning {animalsToSpawn} animals for Day {currentDay}.");
