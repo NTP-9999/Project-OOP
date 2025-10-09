@@ -1187,15 +1187,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9951c00da6c904183ae359399c596480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distanceFromHouse: 20
   currentDay: 1
   difficulty: 1
   isNight: 1
-  enemyPrefab: {fileID: 2950410459805568493, guid: 95f3e291962c4c44eaeb827ab3398e67, type: 3}
-  enemySpawnPoints: []
-  enemySpawnDelay: 1
-  animalPrefab: {fileID: 0}
-  animalSpawnPoints: []
-  animalSpawnDelay: 2
+  enemies: []
+  animals: []
 --- !u!4 &1099295209
 Transform:
   m_ObjectHideFlags: 0

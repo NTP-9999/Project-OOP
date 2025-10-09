@@ -13,11 +13,11 @@ public class GameManager : MonoBehaviour
     public int difficulty = 1;
     public bool isNight = true;
 
-    [Header("Enemy Settings")]
-    public Enemy enemyPrefab;
+    private Enemy enemyPrefab;
+    private Animal animalPrefab;
+
+    [Header("Entity Tracking")]
     [SerializeField] private List<Enemy> enemies = new();
-    [Header("Animal Settings")]
-    public Animal animalPrefab;
     [SerializeField] private List<Animal> animals = new();
 
     private void Awake()
@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
         }
 
         house = FindObjectOfType<Base>();
+        enemyPrefab = Resources.Load<Enemy>("Prefabs/Enemy");
+        animalPrefab = Resources.Load<Animal>("Prefabs/Deer");
     }
 
     private void StartNight()
