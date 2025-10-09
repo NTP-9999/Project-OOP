@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,8 +15,10 @@ public class GameManager : MonoBehaviour
 
     [Header("Enemy Settings")]
     public Enemy enemyPrefab;
+    [SerializeField] private List<Enemy> enemies = new();
     [Header("Animal Settings")]
     public Animal animalPrefab;
+    [SerializeField] private List<Animal> animals = new();
 
     private void Awake()
     {
@@ -68,6 +71,16 @@ public class GameManager : MonoBehaviour
     {
         difficulty++;
         Debug.Log($"📈 Difficulty increased → {difficulty}");
+    }
+
+    public void ClearEnemy()
+    {
+        enemies.Clear();
+    }
+
+    public void ClearAnimals()
+    {
+        animals.Clear();
     }
 
     private IEnumerator SpawnEnemyWave()

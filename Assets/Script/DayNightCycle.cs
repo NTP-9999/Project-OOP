@@ -215,6 +215,8 @@ public class DayNightCycle : MonoBehaviour
         // Sunrise (6 AM)
         if (currentTime >= 6f && currentTime < 6.1f && !hasSunriseTriggered)
         {
+            OnSunrise.RemoveAllListeners();
+            OnSunrise.AddListener(GameManager.Instance.ClearEnemy);
             OnSunrise?.Invoke();
             hasSunriseTriggered = true;
         }
@@ -229,6 +231,8 @@ public class DayNightCycle : MonoBehaviour
         // Sunset (6 PM)
         if (currentTime >= 18f && currentTime < 18.1f && !hasSunsetTriggered)
         {
+            OnSunset.RemoveAllListeners();
+            OnSunset.AddListener(GameManager.Instance.ClearAnimals);
             OnSunset?.Invoke();
             hasSunsetTriggered = true;
         }
