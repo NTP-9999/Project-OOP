@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using UnityEngine.Events;
 
-[System.Serializable]
+[Serializable]
 public class DayNightSettings
 {
     [Header("Time Settings")]
@@ -19,9 +19,8 @@ public class DayNightSettings
 
     [Header("Moon Settings")]
     public Light moonLight;
-    public Color moonColor = Color.white;
-    [Range(0f, 2f)]
-    public float moonIntensity = 0.5f;
+    public Gradient moonColor = new();
+    public AnimationCurve moonIntensityCurve;
 
     [Header("Sky Settings")]
     public Material skyboxMaterial;
@@ -88,21 +87,21 @@ public class DayNightCycle : MonoBehaviour
     {
         currentTime = settings.startTime;
 
-        // Initialize default gradients if not set
-        if (settings.sunColor.colorKeys.Length <= 1)
-        {
-            SetupDefaultSunGradient();
-        }
+        SetupDefaultSunGradient();
+        
+        SetupDefaultMoonGradient();
 
-        if (settings.skyTint.colorKeys.Length <= 1)
-        {
-            SetupDefaultSkyGradient();
-        }
+        SetupDefaultSkyGradient();
 
-        if (settings.fogColor.colorKeys.Length <= 1)
-        {
-            SetupDefaultFogGradient();
-        }
+        SetupDefaultFogGradient();
+
+        settings.moonIntensityCurve = new AnimationCurve(
+            new Keyframe(0f, 0.2f),   // 18:00 เริ่มมีแสงนิด ๆ
+            new Keyframe(0.25f, 0.05f), // 21:00 เริ่มมืด
+            new Keyframe(0.5f, 0.02f),  // 00:00 มืดสุด
+            new Keyframe(0.75f, 0.05f), // 03:00 เริ่มสว่างขึ้นเล็กน้อย
+            new Keyframe(1f, 0.2f)    // 06:00 จางหายไป
+        );
 
         // Enable fog if using it
         if (settings.useFog)
@@ -145,7 +144,7 @@ public class DayNightCycle : MonoBehaviour
         if (settings.sunLight != null)
         {
             // Sun rotation (rises in east, sets in west)
-            float sunAngle = (currentTime - 6f) * 15f; // 15 degrees per hour, starting at sunrise
+            float sunAngle = currentTime * 15f; // 15 degrees per hour, starting at sunrise
             settings.sunLight.transform.rotation = Quaternion.Euler(sunAngle - 90f, 30f, 0f);
 
             // Sun color and intensity
@@ -160,11 +159,17 @@ public class DayNightCycle : MonoBehaviour
         if (settings.moonLight != null)
         {
             // Moon rotation (opposite to sun)
-            float moonAngle = (currentTime - 18f) * 15f;
+            float moonAngle = currentTime * 15f + 180f;
             settings.moonLight.transform.rotation = Quaternion.Euler(moonAngle - 90f, -30f, 0f);
 
-            settings.moonLight.color = settings.moonColor;
-            settings.moonLight.intensity = IsNight ? settings.moonIntensity : 0f;
+            float nightT = 0f;
+            if (currentTime >= 18f)
+                nightT = (currentTime - 18f) / 12f; // 18–24 => 0–0.5
+            else
+                nightT = (currentTime + 6f) / 12f;  // 0–6 => 0.5–1
+
+            settings.moonLight.color = settings.moonColor.Evaluate(nightT);
+            settings.moonLight.intensity = settings.moonIntensityCurve.Evaluate(nightT);
             settings.moonLight.enabled = IsNight;
         }
     }
@@ -302,28 +307,49 @@ public class DayNightCycle : MonoBehaviour
         );
     }
 
-    void SetupDefaultSkyGradient()
+    void SetupDefaultMoonGradient()
     {
         GradientColorKey[] colorKeys = new GradientColorKey[4];
         GradientAlphaKey[] alphaKeys = new GradientAlphaKey[4];
 
-        Color nightColor = new(0.3f, 0.3f, 0.5f);
-        colorKeys[0] = new GradientColorKey(nightColor, 0f);     // Night
-        colorKeys[1] = new GradientColorKey(new Color(0.8f, 0.5f, 0.3f), 0.3f);   // Dawn
-        colorKeys[2] = new GradientColorKey(new Color(0.5f, 0.7f, 1f), 0.7f);     // Day
-        colorKeys[3] = new GradientColorKey(nightColor, 1f);     // Night (same as 0f)
+        // สีแสงพระจันทร์ (จริง ๆ แล้วคือสีของแสง Directional Light ตอนกลางคืน)
+        // เน้นให้แสงเย็น ๆ จาง ๆ ไม่สว่างจนเกินไป
+        colorKeys[0] = new GradientColorKey(new Color(0.5f, 0.55f, 0.7f), 0f);   // 18:00 - เริ่มขึ้น
+        colorKeys[1] = new GradientColorKey(new Color(0.35f, 0.4f, 0.55f), 0.3f); // 21:00 - ฟ้ามืด
+        colorKeys[2] = new GradientColorKey(new Color(0.25f, 0.3f, 0.45f), 0.6f); // 00:00 - มืดสุด
+        colorKeys[3] = new GradientColorKey(new Color(0.4f, 0.45f, 0.6f), 1f);    // 06:00 - เริ่มจางก่อนเช้า
 
-        for (int i = 0; i < 3; i++)
-            alphaKeys[i] = new GradientAlphaKey(1f, i * 0.33f);
-        alphaKeys[3] = new GradientAlphaKey(1f, 1f); // Ensure last alpha matches first
+        for (int i = 0; i < colorKeys.Length; i++)
+            alphaKeys[i] = new GradientAlphaKey(1f, colorKeys[i].time);
+
+        settings.moonColor = new Gradient();
+        settings.moonColor.SetKeys(colorKeys, alphaKeys);
+    }
+
+
+
+    void SetupDefaultSkyGradient()
+    {
+        GradientColorKey[] colorKeys = new GradientColorKey[5];
+        GradientAlphaKey[] alphaKeys = new GradientAlphaKey[5];
+
+        colorKeys[0] = new GradientColorKey(new Color(0.02f, 0.03f, 0.06f), 0f);   // เที่ยงคืน – มืดมาก
+        colorKeys[1] = new GradientColorKey(new Color(0.05f, 0.07f, 0.12f), 0.25f); // 06:00 – ฟ้ารุ่งสาง
+        colorKeys[2] = new GradientColorKey(new Color(0.55f, 0.75f, 1f), 0.5f);     // กลางวัน
+        colorKeys[3] = new GradientColorKey(new Color(0.2f, 0.1f, 0.2f), 0.75f);    // 18:00 – ฟ้าเย็น
+        colorKeys[4] = new GradientColorKey(new Color(0.02f, 0.03f, 0.06f), 1f);    // เที่ยงคืน – มืดอีกครั้ง
+
+        for (int i = 0; i < colorKeys.Length; i++)
+            alphaKeys[i] = new GradientAlphaKey(1f, colorKeys[i].time);
 
         settings.skyTint.SetKeys(colorKeys, alphaKeys);
 
-        // Set a looping skyExposure curve: low at midnight, high at noon, low at midnight
         settings.skyExposure = new AnimationCurve(
-            new Keyframe(0f, 0.7f, 0f, 0f),    // Midnight, low, flat
-            new Keyframe(0.5f, 1f, 0f, 0f),    // Noon, high, flat
-            new Keyframe(1f, 0.7f, 0f, 0f)     // Midnight, low, flat (same as 0f)
+            new Keyframe(0f, 0.15f),   // เที่ยงคืน – มืดมาก
+            new Keyframe(0.25f, 0.4f), // ฟ้ารุ่งสาง
+            new Keyframe(0.5f, 1.2f),  // กลางวัน
+            new Keyframe(0.75f, 0.4f), // เย็น
+            new Keyframe(1f, 0.15f)    // เที่ยงคืน – มืดอีกครั้ง
         );
     }
 

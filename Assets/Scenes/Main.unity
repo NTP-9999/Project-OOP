@@ -641,13 +641,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,7 +954,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -1040,13 +1040,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 809551999}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1191,9 +1191,10 @@ MonoBehaviour:
   difficulty: 1
   isNight: 1
   enemyPrefab: {fileID: 2950410459805568493, guid: 95f3e291962c4c44eaeb827ab3398e67, type: 3}
-  distanceFromHouse: 20
+  enemySpawnPoints: []
   enemySpawnDelay: 1
   animalPrefab: {fileID: 0}
+  animalSpawnPoints: []
   animalSpawnDelay: 2
 --- !u!4 &1099295209
 Transform:
@@ -2086,20 +2087,20 @@ MonoBehaviour:
     sunLight: {fileID: 410087040}
     sunColor:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 0, g: 0, b: 0, a: 0}
-      key3: {r: 0, g: 0, b: 0, a: 0}
-      key4: {r: 0, g: 0, b: 0, a: 0}
-      key5: {r: 0, g: 0, b: 0, a: 0}
+      key0: {r: 0.1882353, g: 0.1882353, b: 0.3764706, a: 1}
+      key1: {r: 1, g: 0.61960787, b: 0.3019608, a: 1}
+      key2: {r: 1, g: 0.8901961, b: 0.627451, a: 0}
+      key3: {r: 1, g: 1, b: 1, a: 0}
+      key4: {r: 1, g: 0.5568628, b: 0.3137255, a: 0}
+      key5: {r: 0.1882353, g: 0.1882353, b: 0.3764706, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
       ctime0: 0
-      ctime1: 65535
-      ctime2: 0
-      ctime3: 0
-      ctime4: 0
-      ctime5: 0
+      ctime1: 13107
+      ctime2: 16384
+      ctime3: 32768
+      ctime4: 49151
+      ctime5: 65535
       ctime6: 0
       ctime7: 0
       atime0: 0
@@ -2111,8 +2112,8 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
-      m_NumColorKeys: 2
+      m_ColorSpace: 0
+      m_NumColorKeys: 6
       m_NumAlphaKeys: 2
     sunIntensity:
       serializedVersion: 2
@@ -2127,8 +2128,53 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 1
-        value: 1
+        time: 0.19994871
+        value: 0.30109173
+        inSlope: 3.7804267
+        outSlope: 3.7804267
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.42801833
+      - serializedVersion: 3
+        time: 0.24987751
+        value: 0.60077786
+        inSlope: 9.124272
+        outSlope: 9.124272
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.23433119
+      - serializedVersion: 3
+        time: 0.30032894
+        value: 1.0006495
+        inSlope: 0.022401866
+        outSlope: 0.022401866
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.17228186
+      - serializedVersion: 3
+        time: 0.5002345
+        value: 1.0004636
+        inSlope: -0.008032071
+        outSlope: -0.008032071
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.1665279
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.74980944
+        value: 0.5004876
+        inSlope: -2.6153798
+        outSlope: -2.6153798
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.15382649
+      - serializedVersion: 3
+        time: 1.000236
+        value: 0.00045865262
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2139,14 +2185,48 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     moonLight: {fileID: 809552000}
-    moonColor: {r: 1, g: 1, b: 1, a: 1}
-    moonIntensity: 0.5
+    moonColor:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0.2793584, g: 0.26402557, b: 0.27552515, a: 0.6117647}
+      key3: {r: 0.2793584, g: 0.26402557, b: 0.27552515, a: 0.6117647}
+      key4: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 0.6117647}
+      key5: {r: 0.29947895, g: 0.2840587, b: 0.29433888, a: 0.6117647}
+      key6: {r: 0.1882353, g: 0.1882353, b: 0.3764706, a: 0.6117647}
+      key7: {r: 0.4, g: 0.9529412, b: 0.77254903, a: 0.6117647}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 65535
+      ctime3: 65535
+      ctime4: 65535
+      ctime5: 65535
+      ctime6: 65535
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    moonIntensityCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     skyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
     skyTint:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 0, g: 0, b: 0, a: 0}
+      key2: {r: 1, g: 1, b: 1, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -2154,7 +2234,7 @@ MonoBehaviour:
       key7: {r: 0, g: 0, b: 0, a: 0}
       ctime0: 0
       ctime1: 65535
-      ctime2: 0
+      ctime2: 65535
       ctime3: 0
       ctime4: 0
       ctime5: 0
@@ -2169,7 +2249,7 @@ MonoBehaviour:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     skyExposure:
@@ -2177,7 +2257,7 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.5
+        value: 0.70092773
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2185,8 +2265,35 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 1
-        value: 1.3
+        time: 0.25070465
+        value: 0.9999826
+        inSlope: 1.3746318
+        outSlope: 1.3746318
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.112335905
+      - serializedVersion: 3
+        time: 0.5000884
+        value: 1.1004664
+        inSlope: -0.01235651
+        outSlope: -0.01235651
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.28156438
+        outWeight: 0.21306793
+      - serializedVersion: 3
+        time: 0.7500734
+        value: 0.8001455
+        inSlope: -1.1020927
+        outSlope: -1.1020927
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.11710572
+      - serializedVersion: 3
+        time: 0.99997056
+        value: 0.7004327
         inSlope: 0
         outSlope: 0
         tangentMode: 0
