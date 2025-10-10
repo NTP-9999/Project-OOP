@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -85,7 +86,7 @@ public class Player : MonoBehaviour
     public void Update()
     {
         if (canMove) HandleMovement();
-        if (Input.GetMouseButtonDown(0)) Punch();
+        if (Input.GetMouseButtonDown(0)) StartCoroutine(Punch());
         if (Health > maxHealth) Health = maxHealth;
         if (stamina > maxStamina) stamina = maxStamina;
         if (Hungry > maxHungry) Hungry = maxHungry;
@@ -121,19 +122,24 @@ public class Player : MonoBehaviour
         
     }
 
-
-    private void Punch()
+    private IEnumerator Punch()
     {
-        if (Time.time - lastAttackTime < attackCooldown) return;
+        if (Time.time - lastAttackTime < attackCooldown) yield break;
+
+        animator.SetTrigger("Punch");
+        canMove = false;
 
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 2f))
         {
             if (hit.collider.TryGetComponent<IEntity>(out IEntity entity))
             {
+                yield return new WaitForSeconds(0.4f);
                 entity.TakeDamage(attackDamage);
             }
         }
         lastAttackTime = Time.time;
+        yield return new WaitForSeconds(1f);
+        canMove = true;
     }
 
 
@@ -150,7 +156,6 @@ public class Player : MonoBehaviour
 
         canMove = true;
     }
-
 
     public void Repair(Recipe recipe)
     {
@@ -192,6 +197,8 @@ public class Player : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (!canMove) return;
+
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 

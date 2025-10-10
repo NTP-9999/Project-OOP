@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : EntityBase
 {
     [Header("Base Stats")]
-    [SerializeField] private float baseHealth = 100f;
     [SerializeField] private float baseDamage = 10f;
     [SerializeField] private float baseSpeed = 2f;
 
@@ -15,8 +15,10 @@ public class Enemy : EntityBase
     [SerializeField] private float attackCooldown = 1.5f;
     [SerializeField] private float attackRange = 8f;
 
+    [Header("UI")]
+    [SerializeField] private GameObject healthBarUI;
+    [SerializeField] private Slider healthBar;
     private float currentDamage;
-    private float currentSpeed;
 
     private Transform target;
     private Transform baseTarget;
@@ -30,11 +32,12 @@ public class Enemy : EntityBase
 
     public void InitStats(int difficulty)
     {
-        Health = baseHealth * difficulty;
+        Health = MaxHealth * difficulty;
         currentDamage = baseDamage * difficulty;
 
-        if (agent != null)
-            agent.speed = baseSpeed + (0.2f * difficulty);
+        if (agent != null) agent.speed = baseSpeed + (0.2f * difficulty);
+        
+        agent.stoppingDistance = attackRange * 0.8f; // stop a bit before hitting range
     }
 
     private void Awake()
@@ -62,13 +65,13 @@ public class Enemy : EntityBase
 
         if (agent != null && target != null)
         {
-            agent.stoppingDistance = attackRange * 0.8f; // stop a bit before hitting range
             agent.updateRotation = true;
             agent.updatePosition = true;
             agent.SetDestination(target.position);
         }
 
         InitStats(GameManager.Instance.difficulty);
+        Health = MaxHealth;
         attackCoroutine = StartCoroutine(AttackLoop());
     }
 
@@ -85,9 +88,12 @@ public class Enemy : EntityBase
             }
 
             float speedPercent = agent.velocity.magnitude / agent.speed; // normalize 0-1
-            if(animator != null)
+            if (animator != null)
                 animator.SetFloat("Speed", speedPercent);
         }
+
+        healthBar.maxValue = MaxHealth;
+        healthBar.value = Health;
     }
 
     // =============================
