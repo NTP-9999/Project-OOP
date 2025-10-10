@@ -217,6 +217,7 @@ public class DayNightCycle : MonoBehaviour
         {
             OnSunrise.RemoveAllListeners();
             OnSunrise.AddListener(GameManager.Instance.ClearEnemy);
+            OnSunrise.AddListener(GameManager.Instance.StartDay);
             OnSunrise?.Invoke();
             hasSunriseTriggered = true;
         }
@@ -233,6 +234,7 @@ public class DayNightCycle : MonoBehaviour
         {
             OnSunset.RemoveAllListeners();
             OnSunset.AddListener(GameManager.Instance.ClearAnimals);
+            OnSunset.AddListener(GameManager.Instance.StartNight);
             OnSunset?.Invoke();
             hasSunsetTriggered = true;
         }

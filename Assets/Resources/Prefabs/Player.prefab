@@ -85,10 +85,14 @@ MonoBehaviour:
   attackDamage: 10
   attackCooldown: 1
   isDead: 0
+  secoundPerHungry: 60
+  staminaRegenRate: 10
+  staminaDrainRate: 10
   moveSpeed: 5
   jumpForce: 5
   isGrounded: 0
   canMove: 1
+  isRunning: 0
   rotationSpeed: 0.8
   mouseSensitivity: 0.8
   tpsCameraPivot: {fileID: 8809095825289472750}

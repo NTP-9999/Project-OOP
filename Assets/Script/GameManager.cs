@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour
 {
@@ -39,8 +40,6 @@ public class GameManager : MonoBehaviour
         DayNightCycle cycle = FindObjectOfType<DayNightCycle>();
         if (cycle != null)
         {
-            cycle.OnSunset.AddListener(StartNight);
-            cycle.OnSunrise.AddListener(StartDay);
             cycle.OnNewDay.AddListener(NewDay);
         }
 
@@ -51,14 +50,14 @@ public class GameManager : MonoBehaviour
         StartDay();
     }
 
-    private void StartNight()
+    public void StartNight()
     {
         isNight = true;
         Debug.Log($"🌙 Night {currentDay} begins!");
         StartCoroutine(SpawnEnemyWave());
     }
 
-    private void StartDay()
+    public void StartDay()
     {
         isNight = false;
         StartCoroutine(SpawnAnimals());
@@ -79,11 +78,25 @@ public class GameManager : MonoBehaviour
 
     public void ClearEnemy()
     {
+        foreach (Enemy enemy in enemies)
+        {
+            if (enemy != null)
+            {
+                Destroy(enemy.gameObject);
+            }
+        }
         enemies.Clear();
     }
 
     public void ClearAnimals()
     {
+        foreach (Animal animal in animals)
+        {
+            if (animal != null)
+            {
+                Destroy(animal.gameObject);
+            }
+        }
         animals.Clear();
     }
 
@@ -94,8 +107,16 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             Vector3 spawnPoint = GetRandomPointOnCircle(house.transform.position, distanceFromHouse); // assuming center is (0,0,0) and radius 20
-            Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
-            // newEnemy.InitStats(difficulty);
+            if (NavMesh.SamplePosition(spawnPoint, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            {
+                // ใช้ hit.position แทน spawnPoint
+                Enemy newEnemy = Instantiate(enemyPrefab, hit.position, Quaternion.identity);
+                enemies.Add(newEnemy);
+            }
+            else
+            {
+                Debug.LogWarning($"⚠️ Failed to find NavMesh near {spawnPoint}, skipping spawn.");
+            }
 
             yield return new WaitForSeconds(Random.Range(1f, 3f)); // wait before spawning next
         }
@@ -114,7 +135,16 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < animalsToSpawn; i++)
         {
             Vector3 spawnPoint = GetRandomPointInCircle(house.transform.position, distanceFromHouse - 5f); // within a smaller radius
-            Animal newAnimal = Instantiate(animalPrefab, spawnPoint, Quaternion.identity);
+
+            if (NavMesh.SamplePosition(spawnPoint, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            {
+                Animal newAnimal = Instantiate(animalPrefab, spawnPoint, Quaternion.identity);
+                animals.Add(newAnimal);
+            }
+            else
+            {
+                Debug.LogWarning($"⚠️ Failed to find NavMesh near {spawnPoint}, skipping spawn.");
+            }
 
             yield return new WaitForSeconds(Random.Range(1f, 3f));
         }
@@ -140,7 +170,7 @@ public class GameManager : MonoBehaviour
         float x = Mathf.Cos(angle) * r;
         float z = Mathf.Sin(angle) * r;
 
-        return new Vector3(center.x + x, center.y, center.z + z);
+        return new Vector3(center.x + x, center.y , center.z + z);
     }
 
 }

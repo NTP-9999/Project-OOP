@@ -1,6 +1,9 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
+using Unity.VisualScripting;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : EntityBase
 {
     [Header("Base Stats")]
@@ -16,24 +19,34 @@ public class Enemy : EntityBase
     private float currentSpeed;
 
     private Transform target;
-    private Transform baseTarget;   // reference to Base
+    private Transform baseTarget;
     private bool chasingStructure = false;
 
     private Coroutine attackCoroutine;
-
     private bool isDead = false;
 
-    // Called externally right after instantiation
+    private NavMeshAgent agent;
+
+    // =============================
+    // Initialization
+    // =============================
     public void InitStats(int difficulty)
     {
         Health = baseHealth * difficulty;
         currentDamage = baseDamage * difficulty;
         currentSpeed = baseSpeed + (0.2f * difficulty);
+
+        if (agent != null)
+            agent.speed = currentSpeed;
     }
 
     private void Awake()
     {
-        // Optionally set some defaults
+        agent = GetComponent<NavMeshAgent>();
+        if (agent == null)
+        {
+            Debug.LogError($"❌ {name} has no NavMeshAgent component!");
+        }
     }
 
     private void Start()
@@ -49,7 +62,15 @@ public class Enemy : EntityBase
             Debug.LogWarning("Enemy: No Base found in scene.");
         }
 
-        // You may delay starting attack until in range
+        if (agent != null && target != null)
+        {
+            agent.speed = currentSpeed;
+            agent.stoppingDistance = attackRange * 0.8f; // stop a bit before hitting range
+            agent.updateRotation = true;
+            agent.updatePosition = true;
+            agent.SetDestination(target.position);
+        }
+
         attackCoroutine = StartCoroutine(AttackLoop());
     }
 
@@ -57,41 +78,38 @@ public class Enemy : EntityBase
     {
         if (isDead) return;
 
-        Move();
-    }
-
-    public override void Move()
-    {
-        if (target == null) return;
-
-        // Rotate toward target smoothly
-        Vector3 dir = (target.position - transform.position).normalized;
-        if (dir != Vector3.zero)
+        if (target != null && agent != null && agent.enabled)
         {
-            Quaternion lookRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 5f);
+            // คอยอัปเดตปลายทางหากเป้าหมายเคลื่อนที่
+            if (!agent.pathPending && agent.remainingDistance > attackRange)
+            {
+                agent.SetDestination(target.position);
+            }
         }
-
-        // Move
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            target.position,
-            currentSpeed * Time.deltaTime
-        );
     }
 
+    // =============================
+    // Attack System
+    // =============================
     private IEnumerator AttackLoop()
     {
         while (!isDead)
         {
-            if (target != null)
+            if (target != null && agent != null)
             {
                 float dist = Vector3.Distance(transform.position, target.position);
+
                 if (dist <= attackRange)
                 {
+                    agent.isStopped = true;  // หยุดเมื่อถึงระยะโจมตี
                     Attack();
                 }
+                else
+                {
+                    agent.isStopped = false;
+                }
             }
+
             yield return new WaitForSeconds(attackCooldown);
         }
     }
@@ -108,18 +126,22 @@ public class Enemy : EntityBase
         }
     }
 
+    // =============================
+    // Target switching
+    // =============================
     public void OnAttackedBy(Transform attacker)
     {
         if (isDead) return;
 
-        // If it’s a tower / structure
         IPlaceableStructure structure = attacker.GetComponent<IPlaceableStructure>();
         if (structure != null)
         {
-            // Optionally check priority (distance, health, etc.)
             target = attacker;
             chasingStructure = true;
             Debug.Log($"{name}: switching target to structure {attacker.name}");
+
+            if (agent != null && agent.enabled)
+                agent.SetDestination(target.position);
         }
     }
 
@@ -129,28 +151,30 @@ public class Enemy : EntityBase
 
         if (chasingStructure && destroyed == target)
         {
-            ReturnToBaseOrOtherTarget();
+            Move();
         }
     }
 
-    private void ReturnToBaseOrOtherTarget()
+    public override void Move()
     {
         if (baseTarget != null)
         {
             target = baseTarget;
             chasingStructure = false;
             Debug.Log($"{name}: returning to base target");
+
+            if (agent != null && agent.enabled)
+                agent.SetDestination(baseTarget.position);
         }
     }
 
+    // =============================
+    // Damage & Death
+    // =============================
     public override void TakeDamage(float amount)
     {
         if (isDead) return;
-
         base.TakeDamage(amount);
-
-        // Optionally: if attacked, attacker could call OnAttackedBy
-        // But here this method itself doesn't know who attacked
     }
 
     public override void Die()
@@ -158,18 +182,13 @@ public class Enemy : EntityBase
         if (isDead) return;
         isDead = true;
 
-        // Stop attack loop
         if (attackCoroutine != null)
-        {
             StopCoroutine(attackCoroutine);
-        }
+
+        if (agent != null && agent.enabled)
+            agent.isStopped = true;
 
         Debug.Log($"{name} died.");
         Destroy(gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        // Clean up if needed
     }
 }

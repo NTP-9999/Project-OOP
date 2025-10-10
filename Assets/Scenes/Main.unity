@@ -258,7 +258,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 257142241851313760, guid: f514be6126461c64eab6f02358f894f3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 634963775}
   m_SourcePrefab: {fileID: 100100000, guid: f514be6126461c64eab6f02358f894f3, type: 3}
 --- !u!1001 &304381241
 PrefabInstance:
@@ -702,6 +705,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1427198524}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &634963773 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 257142241851313760, guid: f514be6126461c64eab6f02358f894f3, type: 3}
+  m_PrefabInstance: {fileID: 228247818}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &634963775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634963773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: d6ce10098c3d946bb80bd238bfbfb76e, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &645717906
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,10 +1227,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9951c00da6c904183ae359399c596480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceFromHouse: 20
+  distanceFromHouse: 40
   currentDay: 1
   difficulty: 1
-  isNight: 1
+  isNight: 0
   enemies: []
   animals: []
 --- !u!4 &1099295209
@@ -2681,10 +2721,6 @@ PrefabInstance:
     - target: {fileID: 118546618963993640, guid: 998da8668ca0842ea9b48cbfb3c4c31b, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 157726508931550346, guid: 998da8668ca0842ea9b48cbfb3c4c31b, type: 3}
-      propertyPath: staminaDrainRate
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6176910833667538903, guid: 998da8668ca0842ea9b48cbfb3c4c31b, type: 3}
       propertyPath: m_LocalPosition.x
