@@ -16,6 +16,7 @@ public class ThirdPersonCamera : MonoBehaviour
     public LayerMask collisionMask;
     public float collisionRadius = 0.3f;
     public float minDistance = 0.5f;
+    public float groundOffset = 0.2f; // ป้องกันกล้องจมพื้น
 
     private float yaw;
     private float pitch;
@@ -28,9 +29,11 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         cam = Camera.main.transform;
     }
+
     void Start()
     {
-        target = Player.Instance.transform;
+        if (target == null && Player.Instance != null)
+            target = Player.Instance.transform;
     }
 
     void LateUpdate()
@@ -49,17 +52,27 @@ public class ThirdPersonCamera : MonoBehaviour
         cameraPivot.rotation = Quaternion.Euler(pitch, yaw, 0f);
         cameraPivot.position = Vector3.Lerp(cameraPivot.position, target.position, smoothFollow);
 
-        // --- Camera offset ---
+        // --- Desired camera position ---
         Vector3 desiredPos = cameraPivot.position + cameraPivot.rotation * offset;
 
-        // --- Collision ---
-        if (Physics.SphereCast(cameraPivot.position, collisionRadius,
-            (desiredPos - cameraPivot.position).normalized, out RaycastHit hit, offset.magnitude, collisionMask))
+        // --- Collision check ---
+        Vector3 direction = (desiredPos - cameraPivot.position).normalized;
+        float distance = offset.magnitude;
+
+        if (Physics.SphereCast(cameraPivot.position, collisionRadius, direction, out RaycastHit hit, distance, collisionMask, QueryTriggerInteraction.Ignore))
         {
-            desiredPos = cameraPivot.position + (desiredPos - cameraPivot.position).normalized * (hit.distance - minDistance);
+            float hitDist = Mathf.Max(hit.distance - minDistance, 0.05f);
+            desiredPos = cameraPivot.position + direction * hitDist;
         }
 
+        // --- ป้องกันกล้องจมพื้น ---
+        if (desiredPos.y < target.position.y + groundOffset)
+        {
+            desiredPos.y = target.position.y + groundOffset;
+        }
+
+        // --- Smooth follow ---
         cam.position = Vector3.SmoothDamp(cam.position, desiredPos, ref camVelocity, smoothFollow);
-        cam.rotation = cameraPivot.rotation;
+        cam.rotation = Quaternion.Lerp(cam.rotation, cameraPivot.rotation, Time.deltaTime * 15f);
     }
 }
