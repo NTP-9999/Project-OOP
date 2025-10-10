@@ -12,6 +12,16 @@ public class Inventory : MonoBehaviour
     public static Inventory Instance { get; private set; }
 
 
+    [Header("Inventory")]
+    [SerializeField] private List<InventoryItem> inventory = new();
+    public InventoryItem[] Inventories => inventory.ToArray();
+    private UnityEvent OnInventoryChanged;
+    [SerializeField] private bool canAddItem = true;
+    public bool CanAddItem => canAddItem;
+    private int currentSelectedIndex = 0;
+    private InventoryItem CurrentSelectedItem => inventory.Count > 0 ? inventory[currentSelectedIndex] : null;
+
+    
     [Header("Inventory UI")]
     [SerializeField] private Transform itemListParent;
     [SerializeField] private GameObject inventoryUI;
@@ -22,15 +32,6 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Color highlightColor = Color.gray;
     [SerializeField] private bool openning = false;
     public bool Openning => openning;
-
-    [Header("Inventory")]
-    [SerializeField] private List<InventoryItem> playerInventory = new();
-    public InventoryItem[] PlayerInventory => playerInventory.ToArray();
-    private UnityEvent OnInventoryChanged;
-    [SerializeField] private bool canAddItem = true;
-    public bool CanAddItem => canAddItem;
-    private int currentSelectedIndex = 0;
-    private InventoryItem CurrentSelectedItem => playerInventory.Count > 0 ? playerInventory[currentSelectedIndex] : null;
 
 
     public void Awake()
@@ -59,19 +60,19 @@ public class Inventory : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            var firstItem = playerInventory.FirstOrDefault();
+            var firstItem = inventory.FirstOrDefault();
             firstItem?.Use(firstItem.Item);
         }
         if (Input.GetKeyDown(KeyCode.Tab)) ToggleUI();
 
         float scroll = Input.mouseScrollDelta.y;
-        if (scroll != 0 && playerInventory.Count > 0)
+        if (scroll != 0 && inventory.Count > 0)
         {
             if (scroll > 0) currentSelectedIndex--;
             else if (scroll < 0) currentSelectedIndex++;
 
-            if (currentSelectedIndex < 0) currentSelectedIndex = playerInventory.Count - 1;
-            if (currentSelectedIndex >= playerInventory.Count) currentSelectedIndex = 0;
+            if (currentSelectedIndex < 0) currentSelectedIndex = inventory.Count - 1;
+            if (currentSelectedIndex >= inventory.Count) currentSelectedIndex = 0;
 
             UpdateSelectedItemUI();
         }
@@ -92,7 +93,7 @@ public class Inventory : MonoBehaviour
     {
         if (!canAddItem) return;
 
-        foreach (var inv in playerInventory)
+        foreach (var inv in inventory)
         {
             if (inv.Item == item)
             {
@@ -101,13 +102,13 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        playerInventory.Add(new InventoryItem(item, amount));
+        inventory.Add(new InventoryItem(item, amount));
         OnInventoryChanged?.Invoke();
     }
 
     public int GetItemAmount(ItemSO item)
     {
-        foreach (var inv in playerInventory)
+        foreach (var inv in inventory)
         {
             if (inv.Item == item)
             {
@@ -121,12 +122,12 @@ public class Inventory : MonoBehaviour
     {
         if (!canAddItem) return;
 
-        foreach (var inv in playerInventory)
+        foreach (var inv in inventory)
         {
             if (inv.Item == item)
             {
                 inv.Amount -= amount;
-                if (inv.Amount <= 0) playerInventory.Remove(inv);
+                if (inv.Amount <= 0) inventory.Remove(inv);
                 OnInventoryChanged?.Invoke();
                 return;
             }
@@ -148,7 +149,7 @@ public class Inventory : MonoBehaviour
 
         spawnedSlots.Clear();
 
-        foreach (var inv in playerInventory)
+        foreach (var inv in inventory)
         {
             itemUI = Instantiate(inventoryItemUI, itemListParent);
 
@@ -157,7 +158,7 @@ public class Inventory : MonoBehaviour
 
             spawnedSlots.Add(itemUI);
         }
-        HighlightSelected(playerInventory.Count > 0 ? 0 : -1);
+        HighlightSelected(inventory.Count > 0 ? 0 : -1);
     }
 
     public void HighlightSelected(int index)

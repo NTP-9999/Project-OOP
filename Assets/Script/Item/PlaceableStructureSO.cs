@@ -5,8 +5,10 @@ using System.Linq;
 [CreateAssetMenu(fileName = "PlacableStructureItem", menuName = "Item/PlacableStructureItem")]
 public class PlaceableStructureSO : ItemSO
 {
-    [SerializeField] private List<RequireItem> requireItem;
-    public RequireItem[] RequireItems => requireItem.ToArray();
+    [SerializeField] private RepairRecipeSO repairRecipe;
+    public RepairRecipeSO RepairRecipe => repairRecipe;
+    [SerializeField] private List<RequireItem> craftRequireItem;
+    public RequireItem[] CraftRequireItem => craftRequireItem.ToArray();
     
     [System.Serializable]
     public class RequireItem

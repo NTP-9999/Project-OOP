@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a55ef87c2f15e8243a3989fe20496c77
+timeCreated: 1436633094
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 41481
+  packageName: Cartoon Balista
+  packageVersion: 1.0
+  assetPath: Assets/Balista/Material/Balista.mat
+  uploadId: 73592

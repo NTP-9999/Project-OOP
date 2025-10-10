@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12db0cbcd12da44ef833ab16b054043b, type: 3}
+  m_Name: Balista
+  m_EditorClassIdentifier: 
+  _name: Balista
+  _icon: {fileID: 21300000, guid: a7dc6e8b251694d279e73eb7ad065dd2, type: 3}
+  prefab: {fileID: 167964, guid: 100af27711b3f4d4ebc48689ce804635, type: 3}
+  repairRecipe: {fileID: 0}
+  craftRequireItem:
+  - item: {fileID: 11400000, guid: 84daa1265d20c47fe9215bce1c20122e, type: 2}
+    amount: 0

@@ -3,7 +3,7 @@ using UnityEngine;
 public interface IPlaceableStructure
 {
     PlaceableStructureSO placeData { get; }
-    RepairRecipe repairData { get; }
+    RepairRecipeSO repairData { get; }
     float Health { get; }
     float MaxHealth { get;}
 

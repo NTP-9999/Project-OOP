@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3825060263c471a46b773b09461cb981
+timeCreated: 1436633822
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 41481
+  packageName: Cartoon Balista
+  packageVersion: 1.0
+  assetPath: Assets/Balista/Scene/Balista_demoscene.unity
+  uploadId: 73592

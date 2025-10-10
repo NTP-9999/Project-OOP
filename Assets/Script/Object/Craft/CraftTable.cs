@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CraftTable : MonoBehaviour
 {
-    [SerializeField] private Recipe currentSelectedRecipe;
-    public Recipe CurrentSelectedRecipe => currentSelectedRecipe;
+    [SerializeField] private RecipeSO currentSelectedRecipe;
+    public RecipeSO CurrentSelectedRecipe => currentSelectedRecipe;
     [SerializeField] private bool playerInArea;
     public bool PlayerInArea => playerInArea;
     

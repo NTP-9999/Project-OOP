@@ -59,6 +59,7 @@ public class Player : MonoBehaviour
 
 
     [Header("Other")]
+    [SerializeField] private Transform handPos;
     private GameObject bloodEffectPrefab;
 
     
@@ -92,6 +93,7 @@ public class Player : MonoBehaviour
     {
         if (canMove) HandleMovement();
         if (Input.GetMouseButtonDown(0)) StartCoroutine(Punch());
+        if (Input.GetKeyDown(KeyCode.G)) PlaceThing();
         if (Health > maxHealth) Health = maxHealth;
         if (stamina > maxStamina) stamina = maxStamina;
         if (Hungry > maxHungry) Hungry = maxHungry;
@@ -104,6 +106,8 @@ public class Player : MonoBehaviour
             Hungry--;
             if (Hungry <= 0) Die();
         }
+
+        if (CurrentHoldItem != null) Instantiate(CurrentHoldItem.Prefab, handPos);
 
         Debug.Log($"CurrentHoldItem is {CurrentHoldItem}");
         Debug.Log($"isGrounded is {isGrounded}");
@@ -174,9 +178,9 @@ public class Player : MonoBehaviour
         canMove = true;
     }
 
-    public void Repair(Recipe recipe)
+    public void Repair(RecipeSO recipe)
     {
-        if (recipe is not RepairRecipe repairRecipe) return;
+        if (recipe is not RepairRecipeSO repairRecipe) return;
 
         canMove = false;
 
