@@ -57,6 +57,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 0.8f;
     [SerializeField] private Transform tpsCameraPivot;
 
+
+    [Header("Other")]
+    private GameObject bloodEffectPrefab;
+
     
     [HideInInspector]
     public ItemSO CurrentHoldItem
@@ -81,6 +85,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         Inventory.Instance.LoadUI();
+        bloodEffectPrefab = Resources.Load<GameObject>("Effects/BloodFX");
     }
 
     public void Update()
@@ -127,21 +132,33 @@ public class Player : MonoBehaviour
         if (Time.time - lastAttackTime < attackCooldown) yield break;
 
         animator.SetTrigger("Punch");
+        rb.linearVelocity = Vector3.zero;
         canMove = false;
 
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 2f))
+        Vector3 rayOrigin = transform.position + Vector3.up * 1f;
+        float rayDistance = 1f;
+
+        Debug.DrawRay(rayOrigin, transform.forward * rayDistance, Color.red, 1f);
+
+        if (Physics.Raycast(rayOrigin, transform.forward, out RaycastHit hit, rayDistance))
         {
-            if (hit.collider.TryGetComponent<IEntity>(out IEntity entity))
+            IEntity entity = hit.collider.GetComponent<IEntity>() ?? hit.collider.GetComponentInParent<IEntity>();
+            if (entity != null)
             {
-                yield return new WaitForSeconds(0.4f);
+                yield return new WaitForSeconds(0.8f);
+
+                GameObject bloodFX = Instantiate(bloodEffectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
+
                 entity.TakeDamage(attackDamage);
+                Debug.Log($"👊 Player punched {entity} for {attackDamage} damage");
+
+                Destroy(bloodFX, 1.5f);
             }
         }
         lastAttackTime = Time.time;
         yield return new WaitForSeconds(1f);
         canMove = true;
     }
-
 
     public void Harvest(ItemSO resource) => StartCoroutine(HarvestIE(resource));
 
