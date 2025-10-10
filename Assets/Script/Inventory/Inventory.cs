@@ -21,7 +21,7 @@ public class Inventory : MonoBehaviour
     private int currentSelectedIndex = 0;
     private InventoryItem CurrentSelectedItem => inventory.Count > 0 ? inventory[currentSelectedIndex] : null;
 
-    
+
     [Header("Inventory UI")]
     [SerializeField] private Transform itemListParent;
     [SerializeField] private GameObject inventoryUI;
@@ -51,18 +51,8 @@ public class Inventory : MonoBehaviour
 
     private void Update()
     {
-        if (Player.Instance.CurrentHoldItem is ItemSO ItemSO)
-        {
-            Instantiate(ItemSO.Prefab, transform.position + transform.forward + Vector3.up, Quaternion.identity);
-        }
-
         if (Input.GetMouseButtonDown(1)) CurrentSelectedItem?.Use(Player.Instance.CurrentHoldItem);
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            var firstItem = inventory.FirstOrDefault();
-            firstItem?.Use(firstItem.Item);
-        }
+        
         if (Input.GetKeyDown(KeyCode.Tab)) ToggleUI();
 
         float scroll = Input.mouseScrollDelta.y;
@@ -98,6 +88,7 @@ public class Inventory : MonoBehaviour
             if (inv.Item == item)
             {
                 inv.Amount += amount;
+                OnInventoryChanged?.Invoke();
                 return;
             }
         }

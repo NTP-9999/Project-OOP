@@ -157,7 +157,7 @@ public class Player : MonoBehaviour
             heldObject = null;
         }
 
-        // ไม่มีของถือ -> ไม่ต้องทำอะไร
+        // ไม่มีของถือAssets/Script/Inventory/Inventory.cs -> ไม่ต้องทำอะไร
         if (CurrentHoldItem == null || CurrentHoldItem.Prefab == null)
             return;
 

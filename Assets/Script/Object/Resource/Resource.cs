@@ -4,10 +4,7 @@ using System.Collections;
 public class Resource : MonoBehaviour
 {
     public static Resource Instance { get; private set; }
-
-    [SerializeField] private float maxHealth = 3f;
-    public float MaxHealth => maxHealth;
-    [SerializeField] private float health = 3f;
+    private float health = 6f;
     public float Health => health;
     
     [SerializeField] private bool playerInRange;
@@ -25,19 +22,20 @@ public class Resource : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E) && Time.time - lastHitTime >= data.HarvestDuration)
             {
                 Player.Instance.Harvest(data);
-                Hit();
+                StartCoroutine(Hit());
                 lastHitTime = Time.time;
             }
         }
     }
     
-    private void Hit()
+    private IEnumerator Hit()
     {
-        if(!playerInRange) return;
+        if(!playerInRange) yield break;
         
         if(playerInRange)
         {
             health--;
+            yield return new WaitForSeconds(data.HarvestDuration);
             Inventory.Instance.AddItemToInventory(data, 1);
             if(health <= 0) Destroy();
         }
