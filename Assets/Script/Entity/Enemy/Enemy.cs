@@ -13,7 +13,7 @@ public class Enemy : EntityBase
 
     [Header("Attack Settings")]
     [SerializeField] private float attackCooldown = 1.5f;
-    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float attackRange = 8f;
 
     private float currentDamage;
     private float currentSpeed;
@@ -26,18 +26,15 @@ public class Enemy : EntityBase
     private bool isDead = false;
 
     private NavMeshAgent agent;
+    private Animator animator;
 
-    // =============================
-    // Initialization
-    // =============================
     public void InitStats(int difficulty)
     {
         Health = baseHealth * difficulty;
         currentDamage = baseDamage * difficulty;
-        currentSpeed = baseSpeed + (0.2f * difficulty);
 
         if (agent != null)
-            agent.speed = currentSpeed;
+            agent.speed = baseSpeed + (0.2f * difficulty);
     }
 
     private void Awake()
@@ -47,6 +44,7 @@ public class Enemy : EntityBase
         {
             Debug.LogError($"❌ {name} has no NavMeshAgent component!");
         }
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -64,13 +62,13 @@ public class Enemy : EntityBase
 
         if (agent != null && target != null)
         {
-            agent.speed = currentSpeed;
             agent.stoppingDistance = attackRange * 0.8f; // stop a bit before hitting range
             agent.updateRotation = true;
             agent.updatePosition = true;
             agent.SetDestination(target.position);
         }
 
+        InitStats(GameManager.Instance.difficulty);
         attackCoroutine = StartCoroutine(AttackLoop());
     }
 
@@ -85,6 +83,10 @@ public class Enemy : EntityBase
             {
                 agent.SetDestination(target.position);
             }
+
+            float speedPercent = agent.velocity.magnitude / agent.speed; // normalize 0-1
+            if(animator != null)
+                animator.SetFloat("Speed", speedPercent);
         }
     }
 
@@ -122,6 +124,7 @@ public class Enemy : EntityBase
         if (entity != null)
         {
             entity.TakeDamage(currentDamage);
+            animator.SetTrigger("Attack");
             Debug.Log($"{name} attacked {target.name} for {currentDamage} damage");
         }
     }
@@ -181,6 +184,7 @@ public class Enemy : EntityBase
     {
         if (isDead) return;
         isDead = true;
+        animator.SetTrigger("Die");
 
         if (attackCoroutine != null)
             StopCoroutine(attackCoroutine);
