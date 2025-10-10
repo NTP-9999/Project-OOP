@@ -13,9 +13,9 @@ public class RecipeSO : ScriptableObject
     [System.Serializable]
     public class RequireItem
     {
-        private ItemSO item;
+        [SerializeField] private ItemSO item;
         public ItemSO Item => item;
-        private int amount;
+        [SerializeField] private int amount;
         public int Amount => amount;
     } 
 }

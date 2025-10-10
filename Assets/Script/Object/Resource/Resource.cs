@@ -9,14 +9,12 @@ public class Resource : MonoBehaviour
     public float MaxHealth => maxHealth;
     [SerializeField] private float health = 3f;
     public float Health => health;
-    [SerializeField] private float duration = 2f;
-    public float Duration => duration;
     
     [SerializeField] private bool playerInRange;
     public bool PlayerInRange => playerInRange;
     
-    [SerializeField] private ItemSO data;
-    public ItemSO Data => data;
+    [SerializeField] private ResourceSO data;
+    public ResourceSO Data => data;
 
     private float lastHitTime = -Mathf.Infinity;
     
@@ -24,7 +22,7 @@ public class Resource : MonoBehaviour
     {
         if (playerInRange)
         {
-            if (Input.GetKeyDown(KeyCode.E) && Time.time - lastHitTime >= duration)
+            if (Input.GetKeyDown(KeyCode.E) && Time.time - lastHitTime >= data.HarvestDuration)
             {
                 Player.Instance.Harvest(data);
                 Hit();
@@ -40,13 +38,13 @@ public class Resource : MonoBehaviour
         if(playerInRange)
         {
             health--;
+            Inventory.Instance.AddItemToInventory(data, 1);
             if(health <= 0) Destroy();
         }
     }
     
-    protected void Destroy()
+    private void Destroy()
     {
-        Inventory.Instance.AddItemToInventory(data, Random.Range(1, 3));
         Destroy(gameObject);
     }
     

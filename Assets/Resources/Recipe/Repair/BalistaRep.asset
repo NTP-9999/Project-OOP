@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95ffe3b08dadaa54e8119fedf2915791, type: 3}
   m_Name: BalistaRep
   m_EditorClassIdentifier: 
-  requireItems: []
+  requireItems:
+  - item: {fileID: 11400000, guid: 84daa1265d20c47fe9215bce1c20122e, type: 2}
+    amount: 2
   resultItem: {fileID: 0}
   repairDuration: 2

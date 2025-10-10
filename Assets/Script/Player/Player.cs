@@ -61,13 +61,11 @@ public class Player : MonoBehaviour
     [Header("Other")]
     [SerializeField] private Transform handPos;
     private GameObject bloodEffectPrefab;
+    private GameObject heldObject;
+    private ItemSO lastHoldItem;
 
-    
-    [HideInInspector]
-    public ItemSO CurrentHoldItem
-    {
-        get { return Inventory.Instance.GetHoldItem(); }
-    }
+    [SerializeField] private ItemSO currentHoldItem;
+    public ItemSO CurrentHoldItem => currentHoldItem;
 
 
     private Rigidbody rb;
@@ -99,6 +97,8 @@ public class Player : MonoBehaviour
         if (Hungry > maxHungry) Hungry = maxHungry;
         if (fatigue > maxFatigue) fatigue = maxFatigue;
 
+        currentHoldItem = Inventory.Instance.GetHoldItem();
+
         hungryTimer += Time.deltaTime;
         if (hungryTimer >= secoundPerHungry)
         {
@@ -107,7 +107,11 @@ public class Player : MonoBehaviour
             if (Hungry <= 0) Die();
         }
 
-        if (CurrentHoldItem != null) Instantiate(CurrentHoldItem.Prefab, handPos);
+        if (CurrentHoldItem != lastHoldItem)
+        {
+            UpdateHeldItem();
+            lastHoldItem = CurrentHoldItem;
+        }
 
         Debug.Log($"CurrentHoldItem is {CurrentHoldItem}");
         Debug.Log($"isGrounded is {isGrounded}");
@@ -128,7 +132,45 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-        
+
+    }
+
+    public void StopMove(float duration)
+    {
+        rb.linearVelocity = Vector3.zero;
+        canMove = false;
+        StartCoroutine(StopMoveIE(duration));
+    }
+
+    private IEnumerator StopMoveIE(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        canMove = true;
+    }
+    
+    private void UpdateHeldItem()
+    {
+        // ลบของเดิมถ้ามี
+        if (heldObject != null)
+        {
+            Destroy(heldObject);
+            heldObject = null;
+        }
+
+        // ไม่มีของถือ -> ไม่ต้องทำอะไร
+        if (CurrentHoldItem == null || CurrentHoldItem.Prefab == null)
+            return;
+
+        // สร้าง object ใหม่ขึ้นตรงตำแหน่งมือ
+        heldObject = Instantiate(CurrentHoldItem.Prefab, handPos);
+
+        // ตั้งตำแหน่งและหมุนให้ตรงมือ
+        heldObject.transform.localPosition = Vector3.zero;
+        heldObject.transform.localRotation = Quaternion.identity;
+
+        // ปิดฟิสิกส์ถ้ามี (เพื่อไม่ให้หลุดจากมือ)
+        var rb = heldObject.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
     }
 
     private IEnumerator Punch()
@@ -136,8 +178,7 @@ public class Player : MonoBehaviour
         if (Time.time - lastAttackTime < attackCooldown) yield break;
 
         animator.SetTrigger("Punch");
-        rb.linearVelocity = Vector3.zero;
-        canMove = false;
+        StopMove(1f);
 
         Vector3 rayOrigin = transform.position + Vector3.up * 1f;
         float rayDistance = 1f;
@@ -149,7 +190,6 @@ public class Player : MonoBehaviour
             IEntity entity = hit.collider.GetComponent<IEntity>() ?? hit.collider.GetComponentInParent<IEntity>();
             if (entity != null)
             {
-                yield return new WaitForSeconds(0.8f);
 
                 GameObject bloodFX = Instantiate(bloodEffectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
 
@@ -160,22 +200,14 @@ public class Player : MonoBehaviour
             }
         }
         lastAttackTime = Time.time;
-        yield return new WaitForSeconds(1f);
-        canMove = true;
     }
 
-    public void Harvest(ItemSO resource) => StartCoroutine(HarvestIE(resource));
-
-
-    private IEnumerator HarvestIE(ItemSO resource)
+    public void Harvest(ItemSO resource)
     {
-        if (resource is not ResourceSO resourceSO) yield break;
+        if (resource is not ResourceSO resourceSO) return;
 
-        canMove = false;
-
-        yield return new WaitForSeconds(resourceSO.Duration);
-
-        canMove = true;
+        StopMove(resourceSO.HarvestDuration);
+        animator.SetTrigger("Harvest");
     }
 
     public void Repair(RecipeSO recipe)
