@@ -98,6 +98,8 @@ public class Player : MonoBehaviour
         canAttack = true;
         Inventory.Instance.LoadUI();
         bloodEffectPrefab = Resources.Load<GameObject>("Effects/BloodFX");
+
+        Cursor.visible = false;
     }
 
     public void Update()
@@ -148,6 +150,14 @@ public class Player : MonoBehaviour
     private void Die()
     {
 
+    }
+
+    public void ToggleMove(bool can)
+    {
+        animator.SetFloat("MoveX", 0f);
+        animator.SetFloat("MoveY", 0f);
+        rb.linearVelocity = Vector3.zero;
+        canMove = !can;
     }
 
     public void StopMove(float duration)

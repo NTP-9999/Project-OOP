@@ -34,11 +34,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5042046394369220494}
   - {fileID: 5968938573281778573}
   - {fileID: 8421526149400308178}
   - {fileID: 1108041902748482912}
   - {fileID: 8809095825289472750}
-  - {fileID: 5042046394369220494}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1928122367590464263
@@ -8361,7 +8361,7 @@ GameObject:
   - component: {fileID: 5042046394369220494}
   - component: {fileID: 7274432534453307877}
   m_Layer: 0
-  m_Name: CameraController
+  m_Name: ThirdPersonCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

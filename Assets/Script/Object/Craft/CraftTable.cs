@@ -47,10 +47,13 @@ public class CraftTable : MonoBehaviour
         if (playerInArea && Input.GetKeyDown(KeyCode.T))
         {
             _openning = !_openning;
+            Player.Instance.ToggleMove(_openning);
             craftUI.SetActive(_openning);
-            Player.Instance.canAttack = !_openning;
             LoadUI();
         }
+        Player.Instance.canAttack = !_openning;
+        Cursor.visible = _openning;
+        Player.Instance.GetComponentInChildren<ThirdPersonCamera>().enabled = !_openning;
     }
 
     public void SelectedThis(CraftRecipeSO recipe)
@@ -67,6 +70,7 @@ public class CraftTable : MonoBehaviour
             playerInArea = false;
             _openning = false;
             craftDescriptionUI.SetActive(false);
+            Player.Instance.ToggleMove(_openning);
             craftUI.SetActive(false);
         }
     }
