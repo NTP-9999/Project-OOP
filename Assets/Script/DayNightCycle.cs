@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using TMPro.EditorUtilities;
 using TMPro;
 using System.Collections;
+using NUnit.Framework.Constraints;
 
 [Serializable]
 public class DayNightSettings
@@ -271,7 +272,9 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
-    public IEnumerator SkipNight()
+    public void SkipNightt() => StartCoroutine(SkipNight());
+
+    private IEnumerator SkipNight()
     {
         if (!IsNight)
         {
@@ -283,7 +286,15 @@ public class DayNightCycle : MonoBehaviour
 
         GameObject FadeInCanvas = Instantiate(fadeInCanvas);
         Destroy(FadeInCanvas, 3f);
+
+        yield return new WaitForSeconds(2.5f);
+
         GameObject FadeOutCanvas = Instantiate(fadeOutCanvas);
+
+        yield return new WaitForSeconds(0.5f);
+        
+        Time.timeScale = 1f;
+        
         Destroy(FadeOutCanvas, 4f);
 
         // ตั้งเวลาไป 6 โมงเช้า
@@ -299,7 +310,6 @@ public class DayNightCycle : MonoBehaviour
 
         dayCount++;
 
-        Time.timeScale = 1f;
         
         Debug.Log($"⏭️ Night skipped → It's now 6 AM, Day {dayCount}");
     }
