@@ -39,6 +39,9 @@ public class DayNightSettings
 
 public class DayNightCycle : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
+    private static WaitForSeconds _waitForSeconds2_5 = new WaitForSeconds(2.5f);
+
     public static DayNightCycle Instance { get; private set; }
     [Header("Day/Night Cycle Controller")]
     public DayNightSettings settings = new();
@@ -276,40 +279,26 @@ public class DayNightCycle : MonoBehaviour
 
     private IEnumerator SkipNight()
     {
-        if (!IsNight)
-        {
-            Debug.Log("☀️ Already daytime, cannot skip night.");
-            yield break;
-        }
-
-        Time.timeScale = 0f;
+        if (!IsNight) yield break;
 
         GameObject FadeInCanvas = Instantiate(fadeInCanvas);
         Destroy(FadeInCanvas, 3f);
 
-        yield return new WaitForSeconds(2.5f);
+        yield return _waitForSeconds2_5;
 
         GameObject FadeOutCanvas = Instantiate(fadeOutCanvas);
 
-        yield return new WaitForSeconds(0.5f);
-        
-        Time.timeScale = 1f;
+        yield return _waitForSeconds0_5;
         
         Destroy(FadeOutCanvas, 4f);
 
-        // ตั้งเวลาไป 6 โมงเช้า
-        SetTime(6f);
-
-        // รีเซ็ต Event ของวันใหม่
-        ResetDailyEvents();
-
-        // เรียก Event Sunrise
-        OnSunrise?.Invoke();
-
-        GameManager.Instance.ClearEnemy();
+        SetTime(5.99f);
 
         dayCount++;
 
+        ResetDailyEvents();
+
+        GameManager.Instance.ClearEnemy();
         
         Debug.Log($"⏭️ Night skipped → It's now 6 AM, Day {dayCount}");
     }
