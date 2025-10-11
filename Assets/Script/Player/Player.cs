@@ -190,6 +190,7 @@ public class Player : MonoBehaviour
 
         // สร้าง object ใหม่ขึ้นตรงตำแหน่งมือ
         heldObject = Instantiate(CurrentHoldItem.Prefab, handPos);
+        heldObject.gameObject.GetComponent<Collider>().enabled = false;
 
         // ตั้งตำแหน่งและหมุนให้ตรงมือ
         heldObject.transform.localPosition = Vector3.zero;
@@ -217,7 +218,7 @@ public class Player : MonoBehaviour
         if (Physics.Raycast(rayOrigin, transform.forward, out RaycastHit hit, rayDistance))
         {
             IEntity entity = hit.collider.GetComponent<IEntity>() ?? hit.collider.GetComponentInParent<IEntity>();
-            if (entity != null)
+            if (entity != null && entity is not Base)
             {
                 yield return new WaitForSeconds(0.8f);
                 GameObject bloodFX = Instantiate(bloodEffectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
@@ -267,6 +268,11 @@ public class Player : MonoBehaviour
         Inventory.Instance.RemoveItemFromInventory(placeable, 1);
 
         placeObject.TryGetComponent<IPlaceableStructure>(out var structure);
+    }
+
+    public void DecreaseFatigue()
+    {
+        fatigue--;
     }
 
 

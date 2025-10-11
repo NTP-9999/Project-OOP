@@ -488,7 +488,7 @@ MonoBehaviour:
   PlayerInArea: 0
   AttackDamage: 20
   AttackCooldown: 2
-  bulletSpeed: 10
+  bulletSpeed: 50
   enemiesInRange: []
   healthBar: {fileID: 6476984689599414010}
 --- !u!65 &1302315243470758655

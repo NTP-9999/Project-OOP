@@ -140,6 +140,12 @@ public class Enemy : EntityBase
             animator.SetTrigger("Attack");
             Debug.Log($"{name} attacked {target.name} for {currentDamage} damage");
         }
+        else if (target.TryGetComponent(out IPlaceableStructure structure))
+        {
+            structure.TakeDamage(currentDamage);
+            animator.SetTrigger("Attack");
+            Debug.Log($"{name} attacked {target.name} for {currentDamage} damage");
+        }
     }
 
     // =============================
@@ -162,8 +168,8 @@ public class Enemy : EntityBase
                 agent.SetDestination(target.position);
             }
 
-            agent.stoppingDistance = 1.8f;
-            attackRange = 1.9f;
+            agent.stoppingDistance = 2f;
+            attackRange = 2.2f;
         }
     }
 

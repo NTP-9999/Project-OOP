@@ -127,6 +127,37 @@ MonoBehaviour:
   maxHealth: 500
   healthBar: {fileID: 2570025270041469036}
   healthBarUI: {fileID: 5492557070566184493}
+--- !u!1 &6294683228715007098
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1402709799158232790}
+  m_Layer: 3
+  m_Name: Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1402709799158232790
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6294683228715007098}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.653, y: 1.063, z: -0.11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 246693629499010610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &244049624747876804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -197,7 +228,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4335768345104374, guid: df32d079362cd4d408b19a6dc52ee968, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1402709799158232790}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1202656555221042, guid: df32d079362cd4d408b19a6dc52ee968, type: 3}
       insertIndex: -1
@@ -205,6 +239,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1202656555221042, guid: df32d079362cd4d408b19a6dc52ee968, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4069079145038133686}
+    - targetCorrespondingSourceObject: {fileID: 1202656555221042, guid: df32d079362cd4d408b19a6dc52ee968, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6972786255826590627}
   m_SourcePrefab: {fileID: 100100000, guid: df32d079362cd4d408b19a6dc52ee968, type: 3}
 --- !u!1 &245248372731601398 stripped
 GameObject:
@@ -245,6 +282,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.71, y: 1.1016166, z: 2.04}
   m_Center: {x: -0.19, y: 0.5508083, z: 0.24}
+--- !u!114 &6972786255826590627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245248372731601398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a2565118b3b5e24392fcea1a542c17d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiPosition: {fileID: 1402709799158232790}
+  interactableText: E
+  canvasScale: {x: 0.007, y: 0.007, z: 0.007}
+  maxJellyScale: {x: 0.01, y: 0.01, z: 0.01}
 --- !u!4 &246693629499010610 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4335768345104374, guid: df32d079362cd4d408b19a6dc52ee968, type: 3}

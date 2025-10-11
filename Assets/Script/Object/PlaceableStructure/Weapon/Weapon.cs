@@ -112,7 +112,7 @@ public class Weapon : MonoBehaviour, IPlaceableStructure
         Rigidbody rb = bullett.GetComponent<Rigidbody>();
         if (rb != null) rb.linearVelocity = -transform.forward * bulletSpeed; // ยิงไปด้านหน้า
 
-        Destroy(bullett, 1f); // กำหนด lifetime
+        Destroy(bullett, 0.7f); // กำหนด lifetime
         yield return null;
     }
 
