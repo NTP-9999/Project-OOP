@@ -2,19 +2,26 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class Weapon : MonoBehaviour, IPlaceableStructure
+public class Weapon : MonoBehaviour
 {
-    public PlaceableStructureSO placeData { get; private set; }
-    public RepairRecipeSO repairData { get; private set; }
-    public float Health { get; private set; }
-    public float MaxHealth { get; private set; }
-    public bool EnemyInArea { get; private set; }
-    public bool PlayerInArea { get; private set; }
-    public float AttackDamage { get; private set; }
-    public float AttackCooldown { get; private set; }
-    private List<Enemy> enemiesInRange = new();
+    [SerializeField] private PlaceableStructureSO placeData;
+    public PlaceableStructureSO PlaceData => placeData;
+    [SerializeField] private RepairRecipeSO repairData;
+    [SerializeField] private float MaxHealth;
+    [SerializeField] private float Health;
+    [SerializeField] private bool EnemyInArea;
+    [SerializeField] private bool PlayerInArea;
+    [SerializeField] private float AttackDamage;
+    [SerializeField] private float AttackCooldown;
+    [SerializeField] private List<Enemy> enemiesInRange = new();
     private float lastAttackTime = -Mathf.Infinity;
+    private GameObject bullet;
 
+    private void Start()
+    {
+        Health = MaxHealth;
+        bullet = Resources.Load<GameObject>("Bullet");
+    }
 
     private void Update()
     {
@@ -34,16 +41,20 @@ public abstract class Weapon : MonoBehaviour, IPlaceableStructure
         Player.Instance.Repair(repairData);
         Health = MaxHealth;
     }
-    public abstract void DestroyStructure();
+    public void DestroyStructure()
+    {
+        Destroy(gameObject);
+    }
 
     private void Attack() => StartCoroutine(AttackIE());
-    protected IEnumerator AttackIE()
+    private IEnumerator AttackIE()
     {
         if (!EnemyInArea) yield break;
 
-        // Implement attack logic here, e.g., deal damage to enemies in range
+        GameObject bullett = Instantiate(bullet, gameObject.transform);
+        bullett.GetComponent<Bullet>().attackDamage = AttackDamage;
 
-        yield return null;
+        Destroy(bullett, 1f);
     }
 
     void OnTriggerEnter(Collider other)

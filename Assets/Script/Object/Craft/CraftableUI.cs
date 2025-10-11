@@ -4,16 +4,11 @@ using TMPro;
 
 public class CraftableUI : MonoBehaviour
 {
-    [SerializeField] private Button selectedButton;
-    public CraftRecipeSO craftRecipe;
+    public Button selectedButton;
     [SerializeField] private TMP_Text itemName;
 
     public void Initialize(CraftRecipeSO recipe)
     {
-        craftRecipe = recipe;
-        itemName.text = craftRecipe.ResultItem.Name;
-
-        selectedButton.onClick.RemoveAllListeners();
-        selectedButton.onClick.AddListener(() => CraftTable.Instance.SelectedThis(craftRecipe));
+        itemName.text = recipe.ResultItem.Name;
     }
 }

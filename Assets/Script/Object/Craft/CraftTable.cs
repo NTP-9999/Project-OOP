@@ -48,6 +48,7 @@ public class CraftTable : MonoBehaviour
         {
             _openning = !_openning;
             craftUI.SetActive(_openning);
+            Player.Instance.canAttack = !_openning;
             LoadUI();
         }
     }
@@ -64,6 +65,7 @@ public class CraftTable : MonoBehaviour
         if (other.TryGetComponent<Player>(out Player player))
         {
             playerInArea = false;
+            _openning = false;
             craftDescriptionUI.SetActive(false);
             craftUI.SetActive(false);
         }
@@ -80,6 +82,8 @@ public class CraftTable : MonoBehaviour
             GameObject craftableObj = Instantiate(craftableUI, craftableContent);
             var craftable = craftableObj.GetComponent<CraftableUI>();
             craftable.Initialize(recipes);
+            craftable.selectedButton.onClick.RemoveAllListeners();
+            craftable.selectedButton.onClick.AddListener(() => SelectedThis(recipes));
             craftableObj.GetComponent<Image>().sprite = recipes.ResultItem.Icon;
         }
     }
@@ -95,7 +99,7 @@ public class CraftTable : MonoBehaviour
         {
             GameObject requireItem = Instantiate(requireItemUI, requireItemList);
             requireItem.GetComponent<Image>().sprite = requireItems.Item.Icon;
-            requireItem.GetComponentInChildren<TMP_Text>().text = requireItems.Item.Name;
+            requireItem.GetComponentInChildren<TMP_Text>().text = $"x{requireItems.Amount}";
         }
     }
 

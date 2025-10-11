@@ -416,6 +416,8 @@ GameObject:
   m_Component:
   - component: {fileID: 465452}
   - component: {fileID: 9559750}
+  - component: {fileID: 5978732225992673252}
+  - component: {fileID: 1302315243470758655}
   m_Layer: 0
   m_Name: Balista
   m_TagString: Untagged
@@ -464,6 +466,48 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5978732225992673252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7f7e533e7a83734e8bf171259147dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placeData: {fileID: 11400000, guid: bac2f1a6046554cd9b131cde82bc2d02, type: 2}
+  repairData: {fileID: 11400000, guid: b7d6bf0b8a9884d128fc10a58f806ca5, type: 2}
+  MaxHealth: 100
+  Health: 0
+  EnemyInArea: 0
+  PlayerInArea: 0
+  AttackDamage: 0
+  AttackCooldown: 0
+  enemiesInRange: []
+--- !u!65 &1302315243470758655
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167964}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 11.05, y: 2.17, z: 10.06}
+  m_Center: {x: 0, y: 1.37, z: 0}
 --- !u!1 &174620
 GameObject:
   m_ObjectHideFlags: 0

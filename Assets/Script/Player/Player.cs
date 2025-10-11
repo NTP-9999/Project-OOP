@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     private float lastAttackTime = -Mathf.Infinity;
     [SerializeField] private bool isDead;
     public bool IsDead => isDead;
+    public bool canAttack;
 
 
     [Header("Stats Settings")]
@@ -83,6 +84,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        canAttack = true;
         Inventory.Instance.LoadUI();
         bloodEffectPrefab = Resources.Load<GameObject>("Effects/BloodFX");
     }
@@ -90,7 +92,7 @@ public class Player : MonoBehaviour
     public void Update()
     {
         if (canMove) HandleMovement();
-        if (Input.GetMouseButtonDown(0)) StartCoroutine(Punch());
+        if (Input.GetMouseButtonDown(0) && canAttack) StartCoroutine(Punch());
         if (Input.GetKeyDown(KeyCode.G)) PlaceThing();
         if (Health > maxHealth) Health = maxHealth;
         if (stamina > maxStamina) stamina = maxStamina;
@@ -214,17 +216,15 @@ public class Player : MonoBehaviour
     {
         if (recipe is not RepairRecipeSO repairRecipe) return;
 
-        canMove = false;
-
         foreach (var required in repairRecipe.RequireItems)
         {
             if (Inventory.Instance.GetItemAmount(required.Item) < required.Amount)
             {
-                canMove = true;
                 return;
             }
             else if (Inventory.Instance.GetItemAmount(required.Item) >= required.Amount)
             {
+                StopMove(repairRecipe.RepairDuration);
                 Inventory.Instance.RemoveItemFromInventory(required.Item, required.Amount);
             }
         }
