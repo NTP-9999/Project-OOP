@@ -1,7 +1,9 @@
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using UnityChan;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -61,6 +63,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 0.8f;
     [SerializeField] private Transform tpsCameraPivot;
 
+    [Header("UI")]
+    [SerializeField] private Slider healthBar;
+    [SerializeField] private Slider staminaBar;
+    [SerializeField] private Slider hungryBar;
+    [SerializeField] private Slider fatigueBar;
+
 
     [Header("Other")]
     [SerializeField] private Transform handPos;
@@ -103,6 +111,8 @@ public class Player : MonoBehaviour
         if (fatigue > maxFatigue) fatigue = maxFatigue;
 
         currentHoldItem = Inventory.Instance.GetHoldItem();
+
+        UpdateUI();
 
         hungryTimer += Time.deltaTime;
         if (hungryTimer >= secoundPerHungry)
@@ -151,6 +161,18 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         canMove = true;
+    }
+
+    private void UpdateUI()
+    {
+        healthBar.maxValue = maxHealth;
+        healthBar.value = Health;
+        staminaBar.maxValue = maxStamina;
+        staminaBar.value = stamina;
+        hungryBar.maxValue = maxHungry;
+        hungryBar.value = Hungry;
+        fatigueBar.maxValue = maxFatigue;
+        fatigueBar.value = fatigue;
     }
     
     private void UpdateHeldItem()
