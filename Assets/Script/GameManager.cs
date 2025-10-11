@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
     private Base house;
     [SerializeField] private float distanceFromHouse = 20f;
-    public int currentDay = 1;
+    public int currentDay = 0;
     public int difficulty = 1;
     public bool isNight = true;
 
