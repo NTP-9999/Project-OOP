@@ -86,6 +86,7 @@ MonoBehaviour:
   attackDamage: 10
   attackCooldown: 1
   isDead: 0
+  canAttack: 0
   secoundPerHungry: 60
   staminaRegenRate: 10
   staminaDrainRate: 10
@@ -94,6 +95,7 @@ MonoBehaviour:
   isGrounded: 0
   canMove: 1
   isRunning: 0
+  isPunching: 0
   rotationSpeed: 0.8
   mouseSensitivity: 0.8
   tpsCameraPivot: {fileID: 8809095825289472750}
@@ -111,7 +113,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7515830a002f4f740bdfbd782122bd3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: []
+  inventory:
+  - item: {fileID: 11400000, guid: bac2f1a6046554cd9b131cde82bc2d02, type: 2}
+    amount: 1
   canAddItem: 1
   itemListParent: {fileID: 0}
   inventoryUI: {fileID: 0}
@@ -8397,6 +8401,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   collisionRadius: 0.3
   minDistance: 0.5
+  groundOffset: 0.2
   cameraPivot: {fileID: 8809095825289472750}
 --- !u!1 &8704212915383428937
 GameObject:

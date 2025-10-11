@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     [Header("Entity Tracking")]
     [SerializeField] private List<Enemy> enemies = new();
     [SerializeField] private List<Animal> animals = new();
+
+    [SerializeField] private TMP_Text dayText;
 
     private void Awake()
     {
@@ -50,6 +53,11 @@ public class GameManager : MonoBehaviour
         StartDay();
     }
 
+    private void Update()
+    {
+        dayText.text = $"Day : {currentDay}";
+    }
+
     public void StartNight()
     {
         isNight = true;
@@ -60,19 +68,19 @@ public class GameManager : MonoBehaviour
     public void StartDay()
     {
         isNight = false;
+        currentDay++;
+        difficulty++;
         StartCoroutine(SpawnAnimals());
         Debug.Log("☀️ Daytime is here, enemies stop spawning.");
     }
 
     private void NewDay()
     {
-        currentDay++;
         IncreaseDifficulty();
     }
 
     private void IncreaseDifficulty()
     {
-        difficulty++;
         Debug.Log($"📈 Difficulty increased → {difficulty}");
     }
 

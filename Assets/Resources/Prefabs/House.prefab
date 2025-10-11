@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7856415507595839354}
   - component: {fileID: 6308167149063553505}
   - component: {fileID: 5092646428108229705}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: House
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,6 +139,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bed
       objectReference: {fileID: 0}
+    - target: {fileID: 1202656555221042, guid: df32d079362cd4d408b19a6dc52ee968, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4335768345104374, guid: df32d079362cd4d408b19a6dc52ee968, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.9997949
@@ -254,6 +258,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8865498992556117081}
     m_Modifications:
+    - target: {fileID: 901692146010703407, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1161980252266182541, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1542280852402516743, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -334,6 +346,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6101826999269427557, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6222042708271110957, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -342,9 +358,21 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6276529558759621433, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6441605409500573986, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8221319929297776622, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
       propertyPath: m_Name
       value: HealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8221319929297776622, guid: efc444ff280384b499d4f3f9005076d8, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
