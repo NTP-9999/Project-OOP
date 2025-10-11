@@ -279,6 +279,7 @@ public class Player : MonoBehaviour
     public void Sleep(Bed bed)
     {
         fatigue++;
+        DayNightCycle.Instance.SkipNight();
     }
 
 

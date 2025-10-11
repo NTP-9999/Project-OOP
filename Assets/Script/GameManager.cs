@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
 
     private void NewDay()
     {
-        IncreaseDifficulty();
+        IncreaseDifficulty();           
     }
 
     private void IncreaseDifficulty()

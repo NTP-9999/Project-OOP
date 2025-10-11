@@ -1,6 +1,9 @@
 using UnityEngine;
 using System;
 using UnityEngine.Events;
+using TMPro.EditorUtilities;
+using TMPro;
+using System.Collections;
 
 [Serializable]
 public class DayNightSettings
@@ -35,6 +38,7 @@ public class DayNightSettings
 
 public class DayNightCycle : MonoBehaviour
 {
+    public static DayNightCycle Instance { get; private set; }
     [Header("Day/Night Cycle Controller")]
     public DayNightSettings settings = new();
 
@@ -68,9 +72,27 @@ public class DayNightCycle : MonoBehaviour
     public string TimeString => FormatTime(currentTime);
     public int DayCount => dayCount;
 
+    [SerializeField] private TMP_Text currentTimeUI;
+    private GameObject fadeInCanvas;
+    private GameObject fadeOutCanvas;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
         InitializeDayNightCycle();
+
+        fadeInCanvas = Resources.Load<GameObject>("UI/FadeInCanvas");
+        fadeOutCanvas = Resources.Load<GameObject>("UI/FadeOutCanvas");
     }
 
     void Update()
@@ -81,6 +103,8 @@ public class DayNightCycle : MonoBehaviour
         UpdateFog();
         CheckTimeEvents();
         UpdateDebugDisplay();
+
+        currentTimeUI.text = timeDisplay;
     }
 
     void InitializeDayNightCycle()
@@ -246,6 +270,40 @@ public class DayNightCycle : MonoBehaviour
             hasMidnightTriggered = true;
         }
     }
+
+    public IEnumerator SkipNight()
+    {
+        if (!IsNight)
+        {
+            Debug.Log("☀️ Already daytime, cannot skip night.");
+            yield break;
+        }
+
+        Time.timeScale = 0f;
+
+        GameObject FadeInCanvas = Instantiate(fadeInCanvas);
+        Destroy(FadeInCanvas, 3f);
+        GameObject FadeOutCanvas = Instantiate(fadeOutCanvas);
+        Destroy(FadeOutCanvas, 4f);
+
+        // ตั้งเวลาไป 6 โมงเช้า
+        SetTime(6f);
+
+        // รีเซ็ต Event ของวันใหม่
+        ResetDailyEvents();
+
+        // เรียก Event Sunrise
+        OnSunrise?.Invoke();
+
+        GameManager.Instance.ClearEnemy();
+
+        dayCount++;
+
+        Time.timeScale = 1f;
+        
+        Debug.Log($"⏭️ Night skipped → It's now 6 AM, Day {dayCount}");
+    }
+
 
     void ResetDailyEvents()
     {

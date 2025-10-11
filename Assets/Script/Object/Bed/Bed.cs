@@ -4,14 +4,21 @@ using UnityEngine;
 public class Bed : MonoBehaviour
 {
     private bool playerInArea;
+    [SerializeField] private List<Enemy> enemiesInArea = new();
+    [SerializeField] private float enemyCheckRadius = 10f;
+    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private bool canSleep = false;
     public bool CanSleep => canSleep;
-    private List<Enemy> enemiesInArea = new();
 
     private void Update()
     {
-        if (enemiesInArea.Count > 0) canSleep = false;
-        else if (enemiesInArea.Count <= 0) canSleep = true;
+        canSleep = PlayerCanSleep();
+    }
+
+    private bool PlayerCanSleep()
+    {
+        Collider[] enemies = Physics.OverlapSphere(transform.position, enemyCheckRadius, enemyLayer);
+        return enemies.Length == 0;
     }
 
     void OnTriggerEnter(Collider other)
@@ -30,7 +37,7 @@ public class Bed : MonoBehaviour
     {
         if (other.TryGetComponent<Player>(out Player player))
         {
-            if (playerInArea && canSleep && Input.GetKeyDown(KeyCode.E))
+            if (playerInArea && canSleep && Input.GetKeyDown(KeyCode.E) && DayNightCycle.Instance.IsNight)
             {
                 player.Sleep(this);
             }
@@ -46,6 +53,20 @@ public class Bed : MonoBehaviour
         if (other.TryGetComponent<Enemy>(out Enemy enemy))
         {
             enemiesInArea.Remove(enemy);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // สีเมื่อปลอดภัย (นอนได้)
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, enemyCheckRadius);
+
+        // ถ้ามีศัตรูในระยะ (รันเกมอยู่)
+        if (Application.isPlaying && !canSleep)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, enemyCheckRadius);
         }
     }
 }
