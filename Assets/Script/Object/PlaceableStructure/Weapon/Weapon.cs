@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour, IPlaceableStructure
 {
@@ -26,6 +27,8 @@ public class Weapon : MonoBehaviour, IPlaceableStructure
     private float lastAttackTime = -Mathf.Infinity;
     private GameObject bullet;
 
+    [SerializeField] private Slider healthBar;
+
     private void Start()
     {
         Health = MaxHealth;
@@ -46,6 +49,9 @@ public class Weapon : MonoBehaviour, IPlaceableStructure
         }
 
         EnemyInArea = true;
+
+        healthBar.maxValue = MaxHealth;
+        healthBar.value = Health;
 
         // Lock กับศัตรูตัวแรก
         currentTarget = enemiesInRange[0];

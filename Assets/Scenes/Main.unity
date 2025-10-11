@@ -5333,6 +5333,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2570025270041469036, guid: f0731eae9ba6347c995d86a7f02099d4, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2570025270041469036, guid: f0731eae9ba6347c995d86a7f02099d4, type: 3}
+      propertyPath: m_Direction
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5210810197930335973, guid: f0731eae9ba6347c995d86a7f02099d4, type: 3}
       propertyPath: m_Name
       value: House
@@ -5343,6 +5351,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7527669488670827246, guid: f0731eae9ba6347c995d86a7f02099d4, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527669488670827246, guid: f0731eae9ba6347c995d86a7f02099d4, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8865498992556117081, guid: f0731eae9ba6347c995d86a7f02099d4, type: 3}

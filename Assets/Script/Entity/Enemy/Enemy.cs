@@ -162,8 +162,8 @@ public class Enemy : EntityBase
                 agent.SetDestination(target.position);
             }
 
-            agent.stoppingDistance = 1.5f;
-            attackRange = 1.8f;
+            agent.stoppingDistance = 1.8f;
+            attackRange = 1.9f;
         }
     }
 
