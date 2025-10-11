@@ -87,8 +87,8 @@ MonoBehaviour:
   attackCooldown: 1
   isDead: 0
   canAttack: 0
-  secoundPerHungry: 60
-  staminaRegenRate: 10
+  secoundPerHungry: 30
+  staminaRegenRate: 6
   staminaDrainRate: 10
   moveSpeed: 5
   jumpForce: 5
@@ -99,6 +99,10 @@ MonoBehaviour:
   rotationSpeed: 0.8
   mouseSensitivity: 0.8
   tpsCameraPivot: {fileID: 8809095825289472750}
+  healthBar: {fileID: 0}
+  staminaBar: {fileID: 0}
+  hungryBar: {fileID: 0}
+  fatigueBar: {fileID: 0}
   handPos: {fileID: 7221133405099616535}
   currentHoldItem: {fileID: 0}
 --- !u!114 &7799386338477077187
