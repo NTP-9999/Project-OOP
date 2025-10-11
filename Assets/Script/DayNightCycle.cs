@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class DayNightSettings
 {
     [Header("Time Settings")]
-    [Range(0.1f, 10f)]
+    [Range(0.01f, 10f)]
     public float timeSpeed = 1f;
 
     [Range(0f, 24f)]
