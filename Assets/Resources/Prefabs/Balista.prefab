@@ -485,7 +485,7 @@ MonoBehaviour:
   Health: 0
   EnemyInArea: 0
   PlayerInArea: 0
-  AttackDamage: 50
+  AttackDamage: 20
   AttackCooldown: 2
   bulletSpeed: 10
   enemiesInRange: []

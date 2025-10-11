@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviour, IPlaceableStructure
 {
     [SerializeField] private PlaceableStructureSO placeData;
     public PlaceableStructureSO PlaceData => placeData;
@@ -15,6 +15,13 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float AttackCooldown;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private List<Enemy> enemiesInRange = new();
+    
+    // Explicit interface implementations to satisfy IPlaceableStructure
+    PlaceableStructureSO IPlaceableStructure.placeData => placeData;
+    RepairRecipeSO IPlaceableStructure.repairData => repairData;
+    float IPlaceableStructure.maxHealth => MaxHealth;
+    float IPlaceableStructure.health { get => Health; }
+
     private Enemy currentTarget;
     private float lastAttackTime = -Mathf.Infinity;
     private GameObject bullet;
@@ -73,6 +80,11 @@ public class Weapon : MonoBehaviour
 
     public void DestroyStructure()
     {
+        foreach (var e in enemiesInRange)
+        {
+            e.OnTargetDestroyed(transform);
+        }
+
         Destroy(gameObject);
     }
 
@@ -84,10 +96,12 @@ public class Weapon : MonoBehaviour
 
         // Spawn bullet 1.5 หน่วยข้างหน้าของ Ballista
         Vector3 spawnPos = transform.position - transform.forward * 1.5f; // -forward เพราะโมเดลหน้า -Z
+        Vector3 realSpawn = new Vector3(spawnPos.x, spawnPos.y + 1.7f, spawnPos.z);
         Quaternion spawnRot = Quaternion.LookRotation(-transform.forward);   // ให้หันไปด้านหน้า
 
-        GameObject bullett = Instantiate(bullet, spawnPos, spawnRot);
+        GameObject bullett = Instantiate(bullet, realSpawn, spawnRot);
         bullett.GetComponent<Bullet>().attackDamage = AttackDamage;
+        bullett.GetComponent<Bullet>().owner = this;
 
         Rigidbody rb = bullett.GetComponent<Rigidbody>();
         if (rb != null) rb.linearVelocity = -transform.forward * bulletSpeed; // ยิงไปด้านหน้า

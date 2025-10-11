@@ -31,6 +31,9 @@ public class Enemy : EntityBase
     private NavMeshAgent agent;
     private Animator animator;
 
+    private float originStoppingDistance;
+    private float originAttackRange;
+
     public void InitStats(int difficulty)
     {
         Health = MaxHealth * difficulty;
@@ -49,6 +52,9 @@ public class Enemy : EntityBase
             Debug.LogError($"❌ {name} has no NavMeshAgent component!");
         }
         animator = GetComponent<Animator>();
+
+        originAttackRange = attackRange;
+        originStoppingDistance = agent.stoppingDistance;
     }
 
     private void Start()
@@ -151,7 +157,13 @@ public class Enemy : EntityBase
             Debug.Log($"{name}: switching target to structure {attacker.name}");
 
             if (agent != null && agent.enabled)
+            {
+                agent.isStopped = false;
                 agent.SetDestination(target.position);
+            }
+
+            agent.stoppingDistance = 1.5f;
+            attackRange = 1.8f;
         }
     }
 
@@ -162,6 +174,8 @@ public class Enemy : EntityBase
         if (chasingStructure && destroyed == target)
         {
             Move();
+            agent.stoppingDistance = originStoppingDistance;
+            attackRange = originAttackRange;
         }
     }
 
