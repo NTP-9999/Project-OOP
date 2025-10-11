@@ -26,6 +26,7 @@ public class Enemy : EntityBase
 
     private Coroutine attackCoroutine;
     private bool isDead = false;
+    public bool IsDead => isDead;
 
     private NavMeshAgent agent;
     private Animator animator;

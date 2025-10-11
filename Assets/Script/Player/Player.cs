@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour
     public int Fatigue => fatigue;
     [SerializeField] private float attackDamage = 10f;
     public float AttackDamage => attackDamage;
-    [SerializeField] private float attackCooldown = 1f;
+    [SerializeField] private float attackCooldown = 1.4f;
     public float AttackCooldown => attackCooldown;
     private float lastAttackTime = -Mathf.Infinity;
     [SerializeField] private bool isDead;
@@ -51,6 +52,8 @@ public class Player : MonoBehaviour
     public bool CanMove => canMove;
     [SerializeField] private bool isRunning;
     public bool IsRunning => isRunning;
+    [SerializeField] private bool isPunching = false;
+    public bool IsPunching => isPunching;
 
 
     [Header("Camera Setup")]
@@ -92,7 +95,7 @@ public class Player : MonoBehaviour
     public void Update()
     {
         if (canMove) HandleMovement();
-        if (Input.GetMouseButtonDown(0) && canAttack) StartCoroutine(Punch());
+        if (Input.GetMouseButtonDown(0) && canAttack && !isPunching) StartCoroutine(Punch());
         if (Input.GetKeyDown(KeyCode.G)) PlaceThing();
         if (Health > maxHealth) Health = maxHealth;
         if (stamina > maxStamina) stamina = maxStamina;
@@ -179,6 +182,8 @@ public class Player : MonoBehaviour
     {
         if (Time.time - lastAttackTime < attackCooldown) yield break;
 
+        isPunching = true;
+
         animator.SetTrigger("Punch");
         StopMove(1f);
 
@@ -192,16 +197,17 @@ public class Player : MonoBehaviour
             IEntity entity = hit.collider.GetComponent<IEntity>() ?? hit.collider.GetComponentInParent<IEntity>();
             if (entity != null)
             {
-
+                yield return new WaitForSeconds(0.8f);
                 GameObject bloodFX = Instantiate(bloodEffectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
 
                 entity.TakeDamage(attackDamage);
                 Debug.Log($"👊 Player punched {entity} for {attackDamage} damage");
 
-                Destroy(bloodFX, 1.5f);
+                Destroy(bloodFX, 0.8f);
             }
         }
         lastAttackTime = Time.time;
+        isPunching = false;
     }
 
     public void Harvest(ItemSO resource)
@@ -234,8 +240,8 @@ public class Player : MonoBehaviour
     public void PlaceThing()
     {
         if (CurrentHoldItem is not PlaceableStructureSO placeable) return;
-
-        var placeObject = Instantiate(placeable.Prefab, transform.forward, Quaternion.identity);
+        Vector3 spawnPos = transform.position + transform.forward * 2f;
+        var placeObject = Instantiate(placeable.Prefab, spawnPos, Quaternion.identity);
         Inventory.Instance.RemoveItemFromInventory(placeable, 1);
 
         placeObject.TryGetComponent<IPlaceableStructure>(out var structure);
