@@ -156,6 +156,7 @@ public class Player : MonoBehaviour
     {
         animator.SetFloat("MoveX", 0f);
         animator.SetFloat("MoveY", 0f);
+        animator.SetBool("IsRunning", false);
         rb.linearVelocity = Vector3.zero;
         canMove = !can;
     }
