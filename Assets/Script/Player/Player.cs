@@ -210,7 +210,7 @@ public class Player : MonoBehaviour
         animator.SetTrigger("Harvest");
     }
 
-    public void Repair(RecipeSO recipe)
+    public void Repair(RepairRecipeSO recipe)
     {
         if (recipe is not RepairRecipeSO repairRecipe) return;
 

@@ -1,14 +1,39 @@
-using System;
-using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class CraftTable : MonoBehaviour
 {
-    [SerializeField] private RecipeSO currentSelectedRecipe;
-    public RecipeSO CurrentSelectedRecipe => currentSelectedRecipe;
+    public static CraftTable Instance { get; private set; }
+
+    [SerializeField] private CraftRecipeSO currentSelectedRecipe;
+    public CraftRecipeSO CurrentSelectedRecipe => currentSelectedRecipe;
     [SerializeField] private bool playerInArea;
     public bool PlayerInArea => playerInArea;
+
+
+    [Header("UI")]
+    [SerializeField] private Transform craftableContent;
+    [SerializeField] private GameObject craftUI;
+    [SerializeField] private bool _openning = false;
+    private GameObject craftableUI;
+
+    [Header("Descriptiom")]
+    [SerializeField] private GameObject craftDescriptionUI;
+    [SerializeField] private Button craftButton;
+    [SerializeField] private Image resultItemImage;
+    [SerializeField] private TMP_Text resultItemName;
+    [SerializeField] private Transform requireItemList;
+    private GameObject requireItemUI;
     
+    private void Start()
+    {
+        craftableUI = Resources.Load<GameObject>("UI/CraftableUI");
+        requireItemUI = Resources.Load<GameObject>("UI/RequireItemUI");
+
+        craftButton.onClick.AddListener(() => Craft());
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<Player>(out Player player))
@@ -17,15 +42,21 @@ public class CraftTable : MonoBehaviour
         }
     }
 
-    void OnTriggerStay(Collider other)
+    private void Update()
     {
-        if (other.TryGetComponent<Player>(out Player player))
+        if (playerInArea && Input.GetKeyDown(KeyCode.T))
         {
-            if (playerInArea && Input.GetKeyDown(KeyCode.G))
-            {
-                Craft();
-            }
+            _openning = !_openning;
+            craftUI.SetActive(_openning);
+            LoadUI();
         }
+    }
+
+    public void SelectedThis(CraftRecipeSO recipe)
+    {
+        currentSelectedRecipe = recipe;
+        craftDescriptionUI.SetActive(true);
+        LoadDescription(recipe);
     }
 
     void OnTriggerExit(Collider other)
@@ -33,6 +64,38 @@ public class CraftTable : MonoBehaviour
         if (other.TryGetComponent<Player>(out Player player))
         {
             playerInArea = false;
+            craftDescriptionUI.SetActive(false);
+            craftUI.SetActive(false);
+        }
+    }
+
+    private void LoadUI()
+    {
+        var allRecipes = Resources.LoadAll<CraftRecipeSO>("Recipes/Craft");
+
+        foreach (Transform t in craftableContent) Destroy(t.gameObject);
+
+        foreach (var recipes in allRecipes)
+        {
+            GameObject craftableObj = Instantiate(craftableUI, craftableContent);
+            var craftable = craftableObj.GetComponent<CraftableUI>();
+            craftable.Initialize(recipes);
+            craftableObj.GetComponent<Image>().sprite = recipes.ResultItem.Icon;
+        }
+    }
+
+    private void LoadDescription(CraftRecipeSO recipe)
+    {
+        resultItemImage.sprite = recipe.ResultItem.Icon;
+        resultItemName.text = recipe.ResultItem.Name;
+
+        foreach (Transform t in requireItemList) Destroy(t.gameObject);
+
+        foreach (var requireItems in recipe.RequireItems)
+        {
+            GameObject requireItem = Instantiate(requireItemUI, requireItemList);
+            requireItem.GetComponent<Image>().sprite = requireItems.Item.Icon;
+            requireItem.GetComponentInChildren<TMP_Text>().text = requireItems.Item.Name;
         }
     }
 

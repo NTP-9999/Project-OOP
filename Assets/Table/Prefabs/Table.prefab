@@ -179,6 +179,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSelectedRecipe: {fileID: 0}
   playerInArea: 0
+  craftableContent: {fileID: 0}
+  craftUI: {fileID: 0}
+  _openning: 0
+  craftDescriptionUI: {fileID: 0}
 --- !u!114 &8886189447422663305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,4 +196,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiPosition: {fileID: 6522895279473083641}
-  interactableText: E
+  interactableText: T
+  canvasScale: {x: 0.007, y: 0.007, z: 0.007}
+  maxJellyScale: {x: 0.01, y: 0.01, z: 0.01}

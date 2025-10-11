@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable, CreateAssetMenu(fileName = "Recipe", menuName = "Recipe/NormalRecipe")]
-public class RecipeSO : ScriptableObject
+[System.Serializable, CreateAssetMenu(fileName = "CraftRecipe", menuName = "Recipe/CraftRecipe")]
+public class CraftRecipeSO : ScriptableObject
 {
     [SerializeField] private List<RequireItem> requireItems = new();
     public RequireItem[] RequireItems => requireItems.ToArray();
