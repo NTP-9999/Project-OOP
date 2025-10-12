@@ -484,15 +484,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placeData: {fileID: 11400000, guid: bac2f1a6046554cd9b131cde82bc2d02, type: 2}
   repairData: {fileID: 11400000, guid: b7d6bf0b8a9884d128fc10a58f806ca5, type: 2}
+  RepairData: {fileID: 0}
   MaxHealth: 100
   Health: 0
   EnemyInArea: 0
-  PlayerInArea: 0
+  playerInArea: 0
   AttackDamage: 20
   AttackCooldown: 2
   bulletSpeed: 50
   enemiesInRange: []
   healthBar: {fileID: 6476984689599414010}
+  playerCheckRadius: 10
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!65 &88316138999346357
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -551,6 +556,7 @@ MonoBehaviour:
   interactableText: R
   canvasScale: {x: 0.007, y: 0.007, z: 0.007}
   maxJellyScale: {x: 0.01, y: 0.01, z: 0.01}
+  isPlaceableStructure: 1
 --- !u!1 &174620
 GameObject:
   m_ObjectHideFlags: 0

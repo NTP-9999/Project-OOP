@@ -2,16 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class Weapon : MonoBehaviour, IPlaceableStructure
 {
     [SerializeField] private PlaceableStructureSO placeData;
     public PlaceableStructureSO PlaceData => placeData;
     [SerializeField] private RepairRecipeSO repairData;
+    public RepairRecipeSO RepairData => repairData;
     [SerializeField] private float MaxHealth;
     [SerializeField] private float Health;
     [SerializeField] private bool EnemyInArea;
-    [SerializeField] private bool PlayerInArea;
+    [SerializeField] private bool playerInArea;
     [SerializeField] private float AttackDamage;
     [SerializeField] private float AttackCooldown;
     [SerializeField] private float bulletSpeed = 10f;
@@ -28,6 +30,8 @@ public class Weapon : MonoBehaviour, IPlaceableStructure
     private GameObject bullet;
 
     [SerializeField] private Slider healthBar;
+    [SerializeField] private float playerCheckRadius = 10f;
+    [SerializeField] private LayerMask playerLayer;
 
     private void Start()
     {
@@ -70,6 +74,15 @@ public class Weapon : MonoBehaviour, IPlaceableStructure
                 lastAttackTime = Time.time;
             }
         }
+
+        playerInArea = PlayerInArea();
+    }
+
+    private bool PlayerInArea()
+    {
+        Collider[] player = Physics.OverlapSphere(transform.position, playerCheckRadius, playerLayer);
+
+        return player.Length >= 1;
     }
 
     public void TakeDamage(float damage)
@@ -130,17 +143,13 @@ public class Weapon : MonoBehaviour, IPlaceableStructure
             enemiesInRange.Add(enemy);
             EnemyInArea = true;
         }
-        else if (other.TryGetComponent<Player>(out Player player))
-        {
-            PlayerInArea = true;
-        }
     }
 
     void OnTriggerStay(Collider other)
     {
         if (other.TryGetComponent<Player>(out Player player))
         {
-            if (Input.GetKeyDown(KeyCode.R)) Fix();
+            if (Input.GetKeyDown(KeyCode.R) && playerInArea && Health != MaxHealth) Fix();
         }
     }
 
@@ -150,10 +159,6 @@ public class Weapon : MonoBehaviour, IPlaceableStructure
         {
             enemiesInRange.Remove(enemy);
             if (enemiesInRange.Count == 0) EnemyInArea = false;
-        }
-        else if (other.TryGetComponent<Player>(out Player player))
-        {
-            PlayerInArea = false;
         }
     }
 }
