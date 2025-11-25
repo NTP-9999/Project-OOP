@@ -29,7 +29,7 @@ public class SaveButton : MonoBehaviour {
         string json = "{\"name\":\"" + name + "\", \"score\":" + score + "}";
         
         // ยิงไปที่ Server ของคุณ (ถ้าทดสอบในเครื่องใช้ localhost)
-        var request = new UnityWebRequest("http://localhost:3000/saveScore", "POST");
+        var request = new UnityWebRequest("http://localhost:3000/SaveScore", "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();

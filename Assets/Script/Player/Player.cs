@@ -149,7 +149,9 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-
+        Destroy(gameObject);
+        isDead = true;
+        Debug.Log("💀 Player has died.");
     }
 
     public void ToggleMove(bool can)
@@ -269,8 +271,10 @@ public class Player : MonoBehaviour
             }
         }
     }
-
-
+    public (string name, float health, float stamina, int hungry, int fatigue) GetData()
+    {
+        return (name, Health, stamina, Hungry, fatigue);
+    }
     public void PlaceThing()
     {
         if (CurrentHoldItem is not PlaceableStructureSO placeable) return;
